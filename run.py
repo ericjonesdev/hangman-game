@@ -12,3 +12,8 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('hangman_user_scores')
 
+gamers = SHEET.worksheet('gamers')
+
+data = gamers.get_all_values()
+
+print(data)
