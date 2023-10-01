@@ -23,8 +23,17 @@ data = gamers.get_all_values()
 
 data2 = hilltop.get_all_values()
 
+
 # Opening game logo
 print(logo)
+
+# Get the high player score and print below game logo
+
+for data in data2:
+    player = hilltop.col_values(1)
+    high_score = hilltop.col_values(2)
+print(f"Top Scorer:-{player} Score:{high_score}")
+
 
 word_list = word_list
 chosen_word = random.choice(word_list)
@@ -32,9 +41,11 @@ word_length = len(chosen_word)
 
 # define a function to clear the user screen
 def clear():
+
     os.system('clear')
 
 def play_game():
+
     end_of_game = False
 
 
@@ -97,4 +108,3 @@ while True:
     
     if play_again != "yes":
         break
-    
