@@ -29,10 +29,12 @@ print(logo)
 
 # Get the high player score and print below game logo
 
-for data in data2:
+
+if len(data2) > 1:
     player = hilltop.col_values(1)
     high_score = hilltop.col_values(2)
 print(f"Top Scorer:-{player} Score:{high_score}")
+
 
 
 word_list = word_list
