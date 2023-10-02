@@ -40,11 +40,26 @@ print(f"Top Scorer:-{player} Score:{high_score}")
 word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
+player_name = input("What is your name?: ")
+
+
+# Function to get or update the player score
+def player_score(player_name):
+    records = gamers.get_all_records()
+    for record in records:
+        if record['username'] == player_name:
+            gamers.update_cell(record.row, 2, record['games_played'] + 1)
+            return record['games_played'] + 1
+    # If player is not found, add them to the sheet
+    gamers.append_row([player_name, 1])
+    return 1
 
 # define a function to clear the user screen
+
 def clear():
 
     os.system('clear')
+
 
 def play_game():
 
@@ -62,8 +77,12 @@ def play_game():
         display += "_"
 
     you_chose = []
+    
+
     # loop to keep game going while condition 'end_of_game' is equal to False
+
     while not end_of_game:
+
         print(' '.join(display))  # Display the current status of the word
 
         guess = input("Guess a letter: ").lower()
@@ -92,12 +111,14 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print("You Lose!!")
+                player_score(player_name)
 
 
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
             print("You Win!!")
+            player_score(player_name)
 
         # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
         # the user has remaining
