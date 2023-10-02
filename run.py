@@ -106,7 +106,13 @@ def play_game():
 while True:
 
     play_game()
-    play_again = input("Do you want to play again? (yes/no): ").lower()
+
+    while True:
+        play_again = input("Do you want to play again? (yes/no): ").lower()
+        if play_again in ["yes", "no"]:
+            break
+        else:
+            print("Invalid input! Please enter 'yes' or 'no'.")
     
     if play_again != "yes":
         break
