@@ -43,15 +43,15 @@ word_length = len(chosen_word)
 player_name = input("What is your name?: ")
 
 
-# Function to get or update the player score
+# Function to get or update the number of games played
 def player_score(player_name):
     records = gamers.get_all_records()
     for record in records:
         if record['username'] == player_name:
-            gamers.update_cell(record.row, 2, record['games_played'] + 1)
+            gamers.update_cell(record.row, 3, record['games_played'])
             return record['games_played'] + 1
     # If player is not found, add them to the sheet
-    gamers.append_row([player_name, 1])
+    gamers.append_row([player_name, None, 1])
     return 1
 
 # define a function to clear the user screen
