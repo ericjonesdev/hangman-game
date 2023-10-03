@@ -35,26 +35,43 @@ if len(data2) > 1:
     high_score = hilltop.col_values(2)
 print(f"Top Scorer:-{player} Score:{high_score}")
 
+# Function to get or update the number of games played
+
+
+def player_score(player_name):
+    records = gamers.get_all_records()
+    for idx, record in enumerate(records, start=2):
+        if record['username'] == player_name:
+            gamers.update_cell(idx, 3, record['games_played'] + 1)
+            return record['games_played'] + 1
+    # If player is not found, add them to the sheet
+    gamers.append_row([player_name, None, 1])
+    return 1
 
 
 word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
+games_played = player_score(player_name)
+wrong_answers = 0
 
 
-# Function to get or update the number of games played
-def player_score(player_name):
+# Function to calculate average score
+def average_score(player_name, wrong_answers, games_played):
     records = gamers.get_all_records()
     for record in records:
-        if record['username'] == player_name:
-            gamers.update_cell(record.row, 3, record['games_played'])
-            return record['games_played'] + 1
-    # If player is not found, add them to the sheet
-    gamers.append_row([player_name, None, 1])
-    return 1
+        if record['Name'] == player_name:
+            total_wrong_answers = record.get('total_wrong_answers', 0) + wrong_answers
+            avg_score = total_wrong_answers / games_played
+            gamers.update_cell(record.row, 4, total_wrong_answers)
+            gamers.update_cell(record.row, 2, avg_score)
+            return avg_score
+    return None
+
 
 # define a function to clear the user screen
+
 
 def clear():
 
@@ -62,6 +79,8 @@ def clear():
 
 
 def play_game():
+
+    global wrong_answers
 
     end_of_game = False
 
@@ -95,6 +114,8 @@ def play_game():
 
         if guess not in chosen_word:
             print(f"You chose {guess}. That's not in the word. You lose a life!")
+            wrong_answers += 1
+        print(wrong_answers)
 
         # Check guessed letter
         for position in range(word_length):
@@ -127,6 +148,7 @@ def play_game():
 while True:
 
     play_game()
+    player_score(player_name)
 
     while True:
         play_again = input("Do you want to play again? (yes/no): ").lower()
