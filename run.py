@@ -38,27 +38,39 @@ print(f"Top Scorer:-{player} Score:{high_score}")
 # Function to get or update the number of games played
 
 
-def player_score(player_name):
+def update_games_played(player_name):
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
-            gamers.update_cell(idx, 3, record['games_played'] + 1)
-            return record['games_played'] + 1
-    # If player is not found, add them to the sheet
-    gamers.append_row([player_name, None, 1])
-    return 1
+            new_games_played = record['games_played'] + 1
+            gamers.update_cell(idx, 3, new_games_played)
+            return new_games_played
+    return None 
+
+
+def get_games_played(player_name):
+    records = gamers.get_all_records()
+    for record in records:
+        if record['username'] == player_name:
+            return record['games_played']
+    # If player is not found, add them to the sheet and return 1
+    gamers.append_row([player_name, None, 0])
+    return 0
+
 
 
 word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
-games_played = player_score(player_name)
+games_played = get_games_played(player_name)
 wrong_answers = 0
 
 
 # Function to calculate average score
-def average_score(player_name, wrong_answers, games_played):
+def average_score(player_name, wrong_answers):
+
+    global games_played
     records = gamers.get_all_records()
     for record in records:
         if record['Name'] == player_name:
@@ -102,7 +114,7 @@ def play_game():
 
     while not end_of_game:
 
-        print(' '.join(display))  # Display the current status of the word
+        print(' '.join(display))
 
         guess = input("Guess a letter: ").lower()
         clear()
@@ -132,24 +144,26 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print("You Lose!!")
-                player_score(player_name)
+                
 
 
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
             print("You Win!!")
-            player_score(player_name)
+            
 
         # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
         # the user has remaining
         print(stages[lives])
+    games_played = update_games_played(player_name)
+
+
 
 while True:
 
     play_game()
-    player_score(player_name)
-
+    
     while True:
         play_again = input("Do you want to play again? (yes/no): ").lower()
         if play_again in ["yes", "no"]:
