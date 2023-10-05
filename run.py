@@ -63,28 +63,32 @@ word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
-games_played = get_games_played(player_name)
+games_played = update_games_played(player_name)
 wrong_answers = 0
+score = 0
 
 
 # Function to calculate average score
 def average_score(player_name, wrong_answers):
 
     global games_played
-    average_score = 0
+    global score
     records = gamers.get_all_records()
-    for idx, record in enumerate(records,start=2):
+    for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
-            total_wrong_answers = int(record.get('total_wrong_answers') or 0)
-            + wrong_answers
+            total_wrong_answers = (
+                int(record.get('total_wrong_answers') or 0) +
+                wrong_answers
+            )
             if games_played == 0:
-                average_score = 0
-                gamers.update_cell(idx, 2, avg_score)
+                score = 0
+                gamers.update_cell(idx, 2, score)
             else:
-                avg_score = total_wrong_answers / games_played
-                gamers.update_cell(idx, 4, total_wrong_answers)
-                gamers.update_cell(idx, 2, avg_score)
-            return avg_score
+                score = total_wrong_answers / games_played
+
+            gamers.update_cell(idx, 4, total_wrong_answers)
+            gamers.update_cell(idx, 2, score)
+            return score
     return None
 
 # define a function to clear the user screen
