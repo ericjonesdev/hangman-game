@@ -71,19 +71,23 @@ wrong_answers = 0
 def average_score(player_name, wrong_answers):
 
     global games_played
+    average_score = 0
     records = gamers.get_all_records()
-    for record in records:
-        if record['Name'] == player_name:
-            total_wrong_answers = record.get('total_wrong_answers', 0) + wrong_answers
-            avg_score = total_wrong_answers / games_played
-            gamers.update_cell(record.row, 4, total_wrong_answers)
-            gamers.update_cell(record.row, 2, avg_score)
+    for idx, record in enumerate(records,start=2):
+        if record['username'] == player_name:
+            total_wrong_answers = int(record.get('total_wrong_answers') or 0)
+            + wrong_answers
+            if games_played == 0:
+                average_score = 0
+                gamers.update_cell(idx, 2, avg_score)
+            else:
+                avg_score = total_wrong_answers / games_played
+                gamers.update_cell(idx, 4, total_wrong_answers)
+                gamers.update_cell(idx, 2, avg_score)
             return avg_score
     return None
 
-
 # define a function to clear the user screen
-
 
 def clear():
 
@@ -144,20 +148,17 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print("You Lose!!")
-                
-
-
+               
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
             print("You Win!!")
-            
-
+         
         # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
         # the user has remaining
         print(stages[lives])
-    games_played = update_games_played(player_name)
-
+    update_games_played(player_name)
+    average_score(player_name, wrong_answers)
 
 
 while True:
