@@ -31,31 +31,28 @@ print(logo)
 
 
 if len(data2) > 1:
-    player = hilltop.col_values(1)
-    high_score = hilltop.col_values(2)
-print(f"Top Scorer:-{player} Score:{high_score}")
+    player = hilltop.col_values(1)[1]
+    high_score = hilltop.col_values(2)[1]
+    print(f"Top Scorer:-{player} Score:{high_score}")
+else:
+    print("No high scores yet!")
 
 # Function to get or update the number of games played
 
 
-def update_games_played(player_name):
+def get_and_update_games_played(player_name):
     records = gamers.get_all_records()
+
+    # Searching for the player's record
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
             new_games_played = record['games_played'] + 1
             gamers.update_cell(idx, 3, new_games_played)
             return new_games_played
-    return None 
 
-
-def get_games_played(player_name):
-    records = gamers.get_all_records()
-    for record in records:
-        if record['username'] == player_name:
-            return record['games_played']
-    # If player is not found, add them to the sheet and return 1
-    gamers.append_row([player_name, None, 0])
-    return 0
+    # If player is not found, add them to the sheet with 1 game played and return 1
+    gamers.append_row([player_name, None, 1])
+    return 1
 
 
 
@@ -63,7 +60,7 @@ word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
-games_played = update_games_played(player_name)
+games_played = get_and_update_games_played(player_name)
 wrong_answers = 0
 score = 0
 
@@ -80,11 +77,10 @@ def average_score(player_name, wrong_answers):
                 int(record.get('total_wrong_answers') or 0) +
                 wrong_answers
             )
-            if games_played == 0:
-                score = 0
-                gamers.update_cell(idx, 2, score)
-            else:
-                score = total_wrong_answers / games_played
+            
+            score = total_wrong_answers / games_played
+            print(score)
+            print(games_played)
 
             gamers.update_cell(idx, 4, total_wrong_answers)
             gamers.update_cell(idx, 2, score)
@@ -95,7 +91,7 @@ def average_score(player_name, wrong_answers):
 
 def clear():
 
-    os.system('clear')
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def play_game():
@@ -161,7 +157,7 @@ def play_game():
         # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
         # the user has remaining
         print(stages[lives])
-    update_games_played(player_name)
+    
     average_score(player_name, wrong_answers)
 
 
@@ -169,12 +165,11 @@ while True:
 
     play_game()
     
-    while True:
+    play_again = input("Do you want to play again? (yes/no): ").lower()
+
+    while play_again not in ["yes", "no"]:
+        print("Invalid input! Please enter 'yes' or 'no'.")
         play_again = input("Do you want to play again? (yes/no): ").lower()
-        if play_again in ["yes", "no"]:
-            break
-        else:
-            print("Invalid input! Please enter 'yes' or 'no'.")
-    
+
     if play_again != "yes":
         break
