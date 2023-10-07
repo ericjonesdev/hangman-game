@@ -42,6 +42,8 @@ else:
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
     # Calculate the new score
+    print(f"Total Wrong Answers: {total_wrong_answers}, Games Played: {games_played}")
+
 
     new_score = total_wrong_answers / games_played
 
@@ -50,11 +52,12 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
     current_top_row = 2
     current_best_score = hilltop.cell(current_top_row, 2).value
 
-    # Convert current_best_scocre to a float 
-    try:
+    # Convert current_best_score to a float if it's not None
+    if current_best_score is not None:
         current_best_score_float = float(current_best_score)
-    except ValueError:
-        current_best_score_float = float('inf')
+    else:
+        current_best_score_float = 0.0
+
     print(current_best_score_float)
 
     if not current_best_score or new_score < current_best_score_float:
@@ -64,6 +67,7 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
 
 def get_and_update_games_played(player_name):
+    global games_played
     records = gamers.get_all_records()
 
     # Searching for the player's record
@@ -91,7 +95,7 @@ total_wrong_answers = 0
 
 # Function to calculate average score
 def average_score(player_name, wrong_answers):
-
+    global total_wrong_answers
     global games_played
     global score
     records = gamers.get_all_records()
