@@ -40,6 +40,29 @@ else:
 # Function to get or update the number of games played
 
 
+def update_hilltop_score(player_name, total_wrong_answers, games_played):
+    # Calculate the new score
+
+    new_score = total_wrong_answers / games_played
+
+    # Concentrate only on the first row
+
+    current_top_row = 2
+    current_best_score = hilltop.cell(current_top_row, 2).value
+
+    # Convert current_best_scocre to a float 
+    try:
+        current_best_score_float = float(current_best_score)
+    except ValueError:
+        current_best_score_float = float('inf')
+    print(current_best_score_float)
+
+    if not current_best_score or new_score < current_best_score_float:
+        # Update 'hilltop' sheet
+        hilltop.update_cell(current_top_row, 1, player_name)
+        hilltop.update_cell(current_top_row, 2, str(new_score))
+
+
 def get_and_update_games_played(player_name):
     records = gamers.get_all_records()
 
@@ -63,6 +86,7 @@ player_name = input("What is your name?: ")
 games_played = get_and_update_games_played(player_name)
 wrong_answers = 0
 score = 0
+total_wrong_answers = 0
 
 
 # Function to calculate average score
@@ -159,6 +183,7 @@ def play_game():
         print(stages[lives])
     
     average_score(player_name, wrong_answers)
+    update_hilltop_score(player_name, total_wrong_answers, games_played)
 
 
 while True:
