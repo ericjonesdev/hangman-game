@@ -213,14 +213,17 @@ def play_game():
     update_hilltop_score(player_name, total_wrong_answers, games_played)
     total_wrong_answers += wrong_answers
     
+total_wrong_answers = 0
+
 while True:
     games_played = get_and_update_games_played(player_name)
-    total_wrong_answers = 0
-
+    
     play_game()
 
     # After each game, update the number of games played
     games_played += 1
+
+    total_wrong_answers = 0
     
     play_again = input("Do you want to play again? (yes/no): ").lower()
 
