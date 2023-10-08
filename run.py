@@ -37,6 +37,27 @@ if len(data2) > 1:
 else:
     print("No high scores yet!")
 
+# Function to view game statistics
+
+def view_game_stats():
+    """Function to display game statistics of the last 10 players."""
+    print("\nGame Stats of the Last 10 Players:")
+    print("-----------------------------------")
+    
+    # Display only the last 10 players
+    user_data = data[-10:]
+
+    for user in user_data:
+
+        if len(user) >= 4:
+
+            username = user[0]
+            score = user[1]
+            games_played = user[2]
+            wrong_answers = user[3]
+        
+        print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {wrong_answers}")
+
 # Function to get or update the number of games played
 
 
@@ -120,6 +141,13 @@ def average_score(player_name, wrong_answers):
 def clear():
 
     os.system('cls' if os.name == 'nt' else 'clear')
+
+# Prompt user to view game stats
+
+view_stats = input("Would you like to view game stats of the last 10 players? (yes/no): ").lower()
+
+if view_stats == "yes":
+    view_game_stats()
 
 
 def play_game():
