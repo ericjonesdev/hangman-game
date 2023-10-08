@@ -58,9 +58,15 @@ def view_game_stats():
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
     # Calculate the new score
-    print(f"Total Wrong Answers: {total_wrong_answers}, Games Played: {games_played}")
+    print(f"Total Wrong Answers: {total_wrong_answers}, \
+        Games Played: {games_played}")
+    new_score = 0
+    
+    if games_played > 0:
 
-    new_score = total_wrong_answers / games_played
+        new_score = total_wrong_answers / games_played
+    else:
+        new_score = 0
 
     # Concentrate only on the first row
 
@@ -73,7 +79,6 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
     else:
         current_best_score_float = 0.0
 
-    print(current_best_score_float)
 
     if not current_best_score or new_score < current_best_score_float:
         # Update 'hilltop' sheet
@@ -82,7 +87,7 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
 
 def get_and_update_games_played(player_name):
-    global games_played
+    
     records = gamers.get_all_records()
 
     # Searching for the player's record
@@ -93,16 +98,14 @@ def get_and_update_games_played(player_name):
             return new_games_played
 
     # If player is not found, add them to the sheet with 1 game played and return 1
-    gamers.append_row([player_name, None, 1])
+    gamers.append_row([player_name, None, 1, 0])
     return 1
-
-
 
 word_list = word_list
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
-games_played = get_and_update_games_played(player_name)
+games_played = 0
 wrong_answers = 0
 score = 0
 total_wrong_answers = 0
@@ -110,9 +113,7 @@ total_wrong_answers = 0
 
 # Function to calculate average score
 def average_score(player_name, wrong_answers):
-    global total_wrong_answers
-    global games_played
-    global score
+    
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
@@ -121,7 +122,7 @@ def average_score(player_name, wrong_answers):
                 wrong_answers
             )
             
-            score = total_wrong_answers / games_played
+            score = total_wrong_answers / record['games_played']
             print(score)
             print(games_played)
 
@@ -146,16 +147,16 @@ if view_stats == "yes":
 
 def play_game():
 
-    global wrong_answers
+    global total_wrong_answers
 
     end_of_game = False
-
 
     # Create a variable called 'lives' to keep track of the number of lives 
     # left. 
     # Set 'lives' to equal 6.
 
     lives = 6
+    wrong_answers = 0
     # Create blanks to illustrate blank word choice
     display = []
     for _ in range(word_length):
@@ -210,11 +211,16 @@ def play_game():
     
     average_score(player_name, wrong_answers)
     update_hilltop_score(player_name, total_wrong_answers, games_played)
-
-
+    total_wrong_answers += wrong_answers
+    
 while True:
+    games_played = get_and_update_games_played(player_name)
+    total_wrong_answers = 0
 
     play_game()
+
+    # After each game, update the number of games played
+    games_played += 1
     
     play_again = input("Do you want to play again? (yes/no): ").lower()
 
@@ -224,3 +230,5 @@ while True:
 
     if play_again != "yes":
         break
+
+print("Thanks for playing!")
