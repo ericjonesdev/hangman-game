@@ -51,8 +51,6 @@ def view_game_stats():
     for user in user_data:
 
         username, score, games_played, total_wrong_answers = user
-        
-        
         print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {total_wrong_answers}")
 
 # Function to get or update the number of games played
