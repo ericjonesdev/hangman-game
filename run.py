@@ -40,23 +40,20 @@ else:
 # Function to view game statistics
 
 def view_game_stats():
-    """Function to display game statistics of the last 10 players."""
+    #Function to display game statistics of the last 10 players.
     print("\nGame Stats of the Last 10 Players:")
     print("-----------------------------------")
     
     # Display only the last 10 players
+    
     user_data = data[-10:]
 
     for user in user_data:
 
-        if len(user) >= 4:
-
-            username = user[0]
-            score = user[1]
-            games_played = user[2]
-            wrong_answers = user[3]
+        username, score, games_played, total_wrong_answers = user
         
-        print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {wrong_answers}")
+        
+        print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {total_wrong_answers}")
 
 # Function to get or update the number of games played
 
@@ -64,7 +61,6 @@ def view_game_stats():
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
     # Calculate the new score
     print(f"Total Wrong Answers: {total_wrong_answers}, Games Played: {games_played}")
-
 
     new_score = total_wrong_answers / games_played
 
