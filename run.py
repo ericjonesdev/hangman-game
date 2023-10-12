@@ -216,9 +216,6 @@ while True:
     
     play_game()
 
-    # After each game, update the number of games played
-    games_played += 1
-
     average_score(player_name, total_wrong_answers)
     update_hilltop_score(player_name, total_wrong_answers, games_played)
     
