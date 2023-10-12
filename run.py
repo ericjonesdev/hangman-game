@@ -55,11 +55,14 @@ def view_game_stats():
 
 # Function to get or update the number of games played
 
-
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
-    # Calculate the new score
+
+    # Print the updated total wrong answers and games played
     print(f"Total Wrong Answers: {total_wrong_answers}, \
         Games Played: {games_played}")
+
+    # Calculate the new score
+
     new_score = 0
     
     if games_played > 0:
@@ -68,7 +71,7 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
     else:
         new_score = 0
 
-    # Concentrate only on the first row
+    # Concentrate only on the first row and update hilltop sheet
 
     current_top_row = 2
     current_best_score = hilltop.cell(current_top_row, 2).value
@@ -78,7 +81,6 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
         current_best_score_float = float(current_best_score)
     else:
         current_best_score_float = 0.0
-
 
     if not current_best_score or new_score < current_best_score_float:
         # Update 'hilltop' sheet
@@ -111,21 +113,17 @@ score = 0
 total_wrong_answers = 0
 
 
+
 # Function to calculate average score
-def average_score(player_name, wrong_answers):
-    
+def average_score(player_name, total_wrong_answers=0):
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
-            total_wrong_answers = (
-                int(record.get('total_wrong_answers') or 0) +
-                wrong_answers
-            )
-            
-            score = total_wrong_answers / record['games_played']
+            games_played = record['games_played']
+            score = total_wrong_answers / games_played
             print(score)
             print(games_played)
-
+            print(total_wrong_answers)
             gamers.update_cell(idx, 4, total_wrong_answers)
             gamers.update_cell(idx, 2, score)
             return score
@@ -140,6 +138,7 @@ def clear():
 # Prompt user to view game stats
 
 view_stats = input("Would you like to view game stats of the last 10 players? (yes/no): ").lower()
+
 
 if view_stats == "yes":
     view_game_stats()
@@ -199,6 +198,7 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print("You Lose!!")
+            
                
         # Check if user has got all letters
         if "_" not in display:
@@ -209,11 +209,7 @@ def play_game():
         # the user has remaining
         print(stages[lives])
     
-    average_score(player_name, wrong_answers)
-    update_hilltop_score(player_name, total_wrong_answers, games_played)
     total_wrong_answers += wrong_answers
-    
-total_wrong_answers = 0
 
 while True:
     games_played = get_and_update_games_played(player_name)
@@ -223,7 +219,8 @@ while True:
     # After each game, update the number of games played
     games_played += 1
 
-    total_wrong_answers = 0
+    average_score(player_name, total_wrong_answers)
+    update_hilltop_score(player_name, total_wrong_answers, games_played)
     
     play_again = input("Do you want to play again? (yes/no): ").lower()
 
