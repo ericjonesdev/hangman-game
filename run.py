@@ -77,8 +77,8 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
     current_best_score = hilltop.cell(current_top_row, 2).value
 
     # Convert current_best_score to a float if it's not None
-    if current_best_score is not None:
-        current_best_score_float = float(current_best_score)
+    if current_best_score is not None and isinstance(current_best_score, (int, float)):
+        current_best_score_float = float(round(current_best_score))
     else:
         current_best_score_float = 0.0
 
