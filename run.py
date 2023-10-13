@@ -39,7 +39,9 @@ else:
 
 # Function to view game statistics
 
+
 def view_game_stats():
+
     #Function to display game statistics of the last 10 players.
     print("\nGame Stats of the Last 10 Players:")
     print("-----------------------------------")
@@ -123,6 +125,7 @@ def get_and_update_games_played(player_name):
     return 1
 
 word_list = word_list
+
 chosen_word = random.choice(word_list)
 word_length = len(chosen_word)
 player_name = input("What is your name?: ")
@@ -140,15 +143,13 @@ def average_score(player_name, total_wrong_answers=0):
         if record['username'] == player_name:
             games_played = record['games_played']
             score = total_wrong_answers / games_played
-            print(score)
-            print(games_played)
-            print(total_wrong_answers)
             gamers.update_cell(idx, 4, total_wrong_answers)
             gamers.update_cell(idx, 2, score)
             return score
     return None
 
 # define a function to clear the user screen
+
 
 def clear():
 
@@ -169,8 +170,8 @@ def play_game():
 
     end_of_game = False
 
-    # Create a variable called 'lives' to keep track of the number of lives 
-    # left. 
+    # Create a variable called 'lives' to keep track of the number of lives
+    # left.
     # Set 'lives' to equal 6.
 
     lives = 6
@@ -217,8 +218,7 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print("You Lose!!")
-            
-               
+             
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
@@ -230,7 +230,9 @@ def play_game():
     
     total_wrong_answers += wrong_answers
 
+
 while True:
+
     games_played = get_and_update_games_played(player_name)
     
     play_game()
