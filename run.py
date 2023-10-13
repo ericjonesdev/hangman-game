@@ -55,14 +55,14 @@ def view_game_stats():
         username, score, games_played, total_wrong_answers = user
         print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {total_wrong_answers}")
 
-# Function to get or update the number of games played
+# Function to get and update the best player score
 
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
     # Print the updated total wrong answers and games played
     print(f"Total Wrong Answers: {total_wrong_answers}, \
-Games Played: {games_played}")
+    Games Played: {games_played}")
 
     # Calculate the new score
     if games_played > 0:
@@ -72,20 +72,19 @@ Games Played: {games_played}")
 
     hilltop_data = hilltop.get_all_records()
 
-    # If hilltop sheet is empty, simply add the current player's data
+    # If hilltop sheet is empty, add the current player's data
     if not hilltop_data:
         hilltop.append_row([player_name, new_score])
         return
 
     # Identify the player with the lowest high_score
-    min_score = float(hilltop_data[0]['high_score'])
-    min_score_player = hilltop_data[0]['user_name']  # Corrected to 'user_name'
+    min_score = float('inf')
+    min_score_player = None
 
     for player in hilltop_data:
         if float(player['high_score']) < min_score:
             min_score = float(player['high_score'])
-            min_score_player = player['user_name']  # Corrected to 'user_name'
-
+            min_score_player = player['user_name']
         # If two players have the same high_score, prioritize based on the average of wrong answers
         elif float(player['high_score']) == min_score:
             # Fetch the other player's total_wrong_answers and games_played from the 'gamers' sheet
@@ -93,18 +92,19 @@ Games Played: {games_played}")
                 if record[0] == player['user_name']:
                     other_player_avg = int(record[3]) / int(record[2])
                     current_player_avg = total_wrong_answers / games_played
-
                     if current_player_avg < other_player_avg:
+                        min_score = new_score
                         min_score_player = player_name
 
-    # If the current player's score is better than the lowest high_score in hilltop sheet, update the sheet
-    if new_score < min_score or (new_score == min_score and min_score_player == player_name):
+    # If the current player's score is better than or equal to the lowest high_score in hilltop sheet, update the sheet
+    if new_score <= min_score:
         # Find the row of the player with the lowest high_score and update it
         for i, player in enumerate(hilltop_data, start=2):
             if player['user_name'] == min_score_player:
                 hilltop.update_cell(i, 1, player_name)
                 hilltop.update_cell(i, 2, str(new_score))
                 break
+
 
 
 # Function to update games played
@@ -134,9 +134,9 @@ wrong_answers = 0
 score = 0
 total_wrong_answers = 0
 
-
-
 # Function to calculate average score
+
+
 def average_score(player_name, total_wrong_answers=0):
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
@@ -217,12 +217,12 @@ def play_game():
             lives -= 1
             if lives == 0:
                 end_of_game = True
-                print("You Lose!!")
+                print(f"{chosen_word} is what you were looking for. You Lose!!")
              
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
-            print("You Win!!")
+            print(f"You correctly guessed {chosen_word} You Win!!")
          
         # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
         # the user has remaining
