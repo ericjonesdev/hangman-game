@@ -161,16 +161,19 @@ def average_score(player_name, total_wrong_answers=0):
             return score
     return None
 
-# define a function to clear the user screen
-
 
 def clear():
+
+    '''
+    Function to clear the user screen for usability
+    '''
 
     os.system('cls' if os.name == 'nt' else 'clear')
 
 # Prompt user to view game stats
 
-view_stats = input("Would you like to view game stats of the last 10 players? (yes/no): ").lower()
+view_stats = input("Would you like to view game stats of the last 10 players? \
+    (yes/no): ").lower()
 
 
 if view_stats == "yes":
@@ -178,6 +181,10 @@ if view_stats == "yes":
 
 
 def play_game():
+
+    '''
+    Function for main gameplay logic
+    '''
 
     global total_wrong_answers
 
