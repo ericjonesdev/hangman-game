@@ -213,6 +213,10 @@ def play_game():
         guess = input("Guess a letter: ").lower()
         clear()
 
+        # Check if the user's input is a valid letter
+        if not guess.isalpha() or len(guess) != 1:
+            print("Please enter a valid single letter.")
+
         if guess in you_chose:
             print(f"You chose {guess}. You already guessed that.")
         else:
