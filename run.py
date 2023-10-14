@@ -24,22 +24,6 @@ data = gamers.get_all_values()
 data2 = hilltop.get_all_values()
 
 
-# Opening game logo
-print(logo)
-
-# Get the high player score and print below game logo
-
-
-if len(data2) > 1:
-    player = hilltop.col_values(1)[1]
-    high_score = hilltop.col_values(2)[1]
-    print(f"Top Scorer:-{player} Score:{high_score}")
-else:
-    print("No high scores yet!")
-
-# Function to view game statistics
-
-
 def view_game_stats():
 
     '''
@@ -57,7 +41,6 @@ def view_game_stats():
 
         username, score, games_played, total_wrong_answers = user
         print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {total_wrong_answers}")
-
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
@@ -134,16 +117,13 @@ def get_and_update_games_played(player_name):
     gamers.append_row([player_name, None, 1, 0])
     return 1
 
+# Word list is pulling in words from import statement
 word_list = word_list
 
-chosen_word = random.choice(word_list)
-word_length = len(chosen_word)
-player_name = input("What is your name?: ")
+#chosen_word = random.choice(word_list)
 games_played = 0
 wrong_answers = 0
-score = 0
 total_wrong_answers = 0
-
 
 def average_score(player_name, total_wrong_answers=0):
 
@@ -161,7 +141,6 @@ def average_score(player_name, total_wrong_answers=0):
             return score
     return None
 
-
 def clear():
 
     '''
@@ -169,15 +148,6 @@ def clear():
     '''
 
     os.system('cls' if os.name == 'nt' else 'clear')
-
-# Prompt user to view game stats
-
-view_stats = input("Would you like to view game stats of the last 10 players? \
-    (yes/no): ").lower()
-
-
-if view_stats == "yes":
-    view_game_stats()
 
 
 def play_game():
@@ -187,6 +157,10 @@ def play_game():
     '''
 
     global total_wrong_answers
+    
+    chosen_word = random.choice(word_list)
+    word_length = len(chosen_word)
+
 
     end_of_game = False
 
@@ -256,22 +230,53 @@ def play_game():
     total_wrong_answers += wrong_answers
 
 
-while True:
+def initialize_game():
+    global player_name, total_wrong_answers
 
-    games_played = get_and_update_games_played(player_name)
+    print(logo)
+
+    if len(data2) > 1:
+        player = hilltop.col_values(1)[1]
+        high_score = hilltop.col_values(2)[1]
+        print(f"Top Scorer:-{player} Score:{high_score}")
+    else:
+        print("No high scores yet!")
+
+    player_name = input("What is your name?: ")
+
+    # Initialize the total wrong answers
+    total_wrong_answers = 0
+
+    # Prompt user to view game stats
+    view_stats = input("Would you like to view game stats of the last 10 players? (yes/no): ").lower()
+    if view_stats == "yes":
+        view_game_stats()
+
+def main():
+    '''
+    Initialize game function
+    '''
     
-    play_game()
+    initialize_game()
 
-    average_score(player_name, total_wrong_answers)
-    update_hilltop_score(player_name, total_wrong_answers, games_played)
-    
-    play_again = input("Do you want to play again? (yes/no): ").lower()
+    while True:
+        games_played = get_and_update_games_played(player_name)
 
-    while play_again not in ["yes", "no"]:
-        print("Invalid input! Please enter 'yes' or 'no'.")
+        play_game()
+
+        average_score(player_name, total_wrong_answers)
+        update_hilltop_score(player_name, total_wrong_answers, games_played)
+
         play_again = input("Do you want to play again? (yes/no): ").lower()
 
-    if play_again != "yes":
-        break
+        while play_again not in ["yes", "no"]:
+            print("Invalid input! Please enter 'yes' or 'no'.")
+            play_again = input("Do you want to play again? (yes/no): ").lower()
 
-print("Thanks for playing!")
+        if play_again != "yes":
+            break
+
+    print("Thanks for playing!")
+
+if __name__ == "__main__":
+    main()
