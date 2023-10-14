@@ -183,7 +183,7 @@ def play_game():
 
         print(' '.join(display))
 
-        guess = input("Guess a letter: ").lower()
+        guess = input("Guess a letter:\n ").lower()
         clear()
 
         # Check if the user's input is a valid letter
@@ -241,13 +241,13 @@ def initialize_game():
     else:
         print("No high scores yet!")
 
-    player_name = input("What is your name?: ")
+    player_name = input("What is your name?:\n ")
 
     # Initialize the total wrong answers
     total_wrong_answers = 0
 
     # Prompt user to view game stats
-    view_stats = input("Would you like to view game stats of the last 10 players? (yes/no): ").lower()
+    view_stats = input("Would you like to view game stats of the last 10 players? (yes/no):\n ").lower()
     if view_stats == "yes":
         view_game_stats()
 
@@ -270,7 +270,7 @@ def main():
 
         while play_again not in ["yes", "no"]:
             print("Invalid input! Please enter 'yes' or 'no'.")
-            play_again = input("Do you want to play again? (yes/no): ").lower()
+            play_again = input("Do you want to play again? (yes/no):\n ").lower()
 
         if play_again != "yes":
             break
