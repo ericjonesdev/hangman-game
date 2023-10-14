@@ -247,9 +247,16 @@ def initialize_game():
     total_wrong_answers = 0
 
     # Prompt user to view game stats
-    view_stats = input("Would you like to view game stats of the last 10 players? (yes/no):\n ").lower()
-    if view_stats == "yes":
-        view_game_stats()
+    while True:
+        view_stats = input("Would you like to view game stats of the last 10 players? (yes/no):\n ").lower()
+        if view_stats == "yes":
+            view_game_stats()
+            break
+        elif view_stats == "no":
+            break
+        else:
+            print("Invalid input! Please enter 'yes' or 'no'.")
+
 
 def main():
     '''
