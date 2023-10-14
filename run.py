@@ -120,7 +120,6 @@ def get_and_update_games_played(player_name):
 # Word list is pulling in words from import statement
 word_list = word_list
 
-#chosen_word = random.choice(word_list)
 games_played = 0
 wrong_answers = 0
 total_wrong_answers = 0
