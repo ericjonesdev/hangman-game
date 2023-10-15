@@ -32,9 +32,9 @@ def view_game_stats():
 
     print("\nGame Stats of the Last 10 Players:")
     print("-----------------------------------")
-    
+
     # Display only the last 10 players
-    
+
     user_data = data[-10:]
 
     for user in user_data:
@@ -164,13 +164,13 @@ def play_game():
     '''
 
     global total_wrong_answers
-    
+
     chosen_word = random.choice(word_list)
     word_length = len(chosen_word)
     end_of_game = False
 
-    # Create a variable called 'lives' to keep track of the number of lives
-    # left.
+    # Create a variable called 'lives' to keep
+    # track of the number of lives left.
     # Set 'lives' to equal 6.
 
     lives = 6
@@ -182,7 +182,8 @@ def play_game():
 
     you_chose = []
 
-    # loop to keep game going while condition 'end_of_game' is equal to False
+    # loop to keep game going while condition
+    # 'end_of_game' is equal to False
 
     while not end_of_game:
 
@@ -202,7 +203,8 @@ def play_game():
             you_chose.append(guess)
 
         if guess not in chosen_word:
-            print(f"You chose {guess}. That's not in the word. You lose a life!")
+            print(f"You chose {guess}.\
+                 That's not in the word. You lose a life!")
             wrong_answers += 1
         print(wrong_answers)
 
@@ -220,17 +222,20 @@ def play_game():
             lives -= 1
             if lives == 0:
                 end_of_game = True
-                print(f"{chosen_word} is what you were looking for. You Lose!!")
-          
+                print(f"{chosen_word} is what\
+                     you were looking for. You Lose!!")
+     
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
-            print(f"You correctly guessed {chosen_word} You Win!!")
-         
-        # Print the ASCII art from 'stages' that corresponds to the current number of 'lives' 
+            print(f"You correctly\
+                 guessed {chosen_word} You Win!!")
+  
+        # Print the ASCII art from 'stages' that corresponds
+        # to the current number of 'lives' 
         # the user has remaining
         print(stages[lives])
-    
+
     total_wrong_answers += wrong_answers
 
 
@@ -253,7 +258,8 @@ def initialize_game():
 
     # Prompt user to view game stats
     while True:
-        view_stats = input("Would you like to view game stats of the last 10 players? (yes/no):\n ").lower()
+        view_stats = input("Would you like to view game stats\
+             of the last 10 players? (yes/no):\n ").lower()
         if view_stats == "yes":
             view_game_stats()
             break
