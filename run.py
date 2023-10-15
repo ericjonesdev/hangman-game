@@ -224,7 +224,7 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print(f"{chosen_word} is what" +
-                      "you were looking for. You Lose!!")
+                      " you were looking for. You Lose!!")
 
         # Check if user has got all letters
         if "_" not in display:
