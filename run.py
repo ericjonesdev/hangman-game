@@ -211,11 +211,11 @@ def play_game():
         # Check guessed letter
         for position in range(word_length):
             letter = chosen_word[position]
-          
+
             if letter == guess:
                 display[position] = letter
 
-        # If guess is not a letter in the chosen_word, 
+        # If guess is not a letter in the chosen_word,
         # then reduce the amount of lives by 1.
         # When lives go down to 0, game is over and "You lose" is printed
         if guess not in chosen_word:
@@ -224,15 +224,15 @@ def play_game():
                 end_of_game = True
                 print(f"{chosen_word} is what\
                      you were looking for. You Lose!!")
-     
+
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
             print(f"You correctly\
                  guessed {chosen_word} You Win!!")
-  
+
         # Print the ASCII art from 'stages' that corresponds
-        # to the current number of 'lives' 
+        # to the current number of 'lives'
         # the user has remaining
         print(stages[lives])
 
@@ -273,7 +273,7 @@ def main():
     '''
     Initialize game function
     '''
- 
+
     initialize_game()
 
     while True:
@@ -288,7 +288,8 @@ def main():
 
         while play_again not in ["yes", "no"]:
             print("Invalid input! Please enter 'yes' or 'no'.")
-            play_again = input("Do you want to play again? (yes/no):\n ").lower()
+            play_again = input("Do you want\
+                 to play again? (yes/no):\n ").lower()
 
         if play_again != "yes":
             break
