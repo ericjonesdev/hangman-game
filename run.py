@@ -40,9 +40,10 @@ def view_game_stats():
     for user in user_data:
 
         username, score, games_played, total_wrong_answers = user
-        print(f"Name: {username}, Score: {score},\
-             Games Played: {games_played},\
-             Wrong Answers: {total_wrong_answers}")
+        print(f"Name: {username}, Score: {score},"
+              f" Games Played: {games_played},"
+              f" Wrong Answers: {total_wrong_answers}")
+
 
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
