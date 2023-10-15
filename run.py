@@ -45,7 +45,6 @@ def view_game_stats():
               f" Wrong Answers: {total_wrong_answers}")
 
 
-
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
     '''
