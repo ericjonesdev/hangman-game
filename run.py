@@ -40,7 +40,10 @@ def view_game_stats():
     for user in user_data:
 
         username, score, games_played, total_wrong_answers = user
-        print(f"Name: {username}, Score: {score}, Games Played: {games_played}, Wrong Answers: {total_wrong_answers}")
+        print(f"Name: {username}, Score: {score},\
+             Games Played: {games_played},\
+             Wrong Answers: {total_wrong_answers}")
+
 
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
 
@@ -73,10 +76,10 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
         if float(player['high_score']) < min_score:
             min_score = float(player['high_score'])
             min_score_player = player['user_name']
-        # If two players have the same high_score, prioritize based on the 
+        # If two players have the same high_score, prioritize based on the
         # #average of wrong answers
         elif float(player['high_score']) == min_score:
-            # Fetch the other player's total_wrong_answers and games_played 
+            # Fetch the other player's total_wrong_answers and games_played
             # #from the 'gamers' sheet
             for record in data:
                 if record[0] == player['user_name']:
@@ -102,7 +105,7 @@ def get_and_update_games_played(player_name):
     '''
     Function to update games played
     '''
-    
+
     records = gamers.get_all_records()
 
     # Search for the player's record
@@ -118,11 +121,15 @@ def get_and_update_games_played(player_name):
     return 1
 
 # Word list is pulling in words from import statement
+
+
 word_list = word_list
+
 
 games_played = 0
 wrong_answers = 0
 total_wrong_answers = 0
+
 
 def average_score(player_name, total_wrong_answers=0):
 
@@ -139,6 +146,7 @@ def average_score(player_name, total_wrong_answers=0):
             gamers.update_cell(idx, 2, score)
             return score
     return None
+
 
 def clear():
 
@@ -159,8 +167,6 @@ def play_game():
     
     chosen_word = random.choice(word_list)
     word_length = len(chosen_word)
-
-
     end_of_game = False
 
     # Create a variable called 'lives' to keep track of the number of lives
@@ -175,7 +181,6 @@ def play_game():
         display += "_"
 
     you_chose = []
-    
 
     # loop to keep game going while condition 'end_of_game' is equal to False
 
@@ -204,7 +209,7 @@ def play_game():
         # Check guessed letter
         for position in range(word_length):
             letter = chosen_word[position]
-            
+          
             if letter == guess:
                 display[position] = letter
 
@@ -216,7 +221,7 @@ def play_game():
             if lives == 0:
                 end_of_game = True
                 print(f"{chosen_word} is what you were looking for. You Lose!!")
-             
+          
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
@@ -262,7 +267,7 @@ def main():
     '''
     Initialize game function
     '''
-    
+ 
     initialize_game()
 
     while True:
@@ -283,6 +288,7 @@ def main():
             break
 
     print("Thanks for playing!")
+
 
 if __name__ == "__main__":
     main()
