@@ -204,7 +204,7 @@ def play_game():
             you_chose.append(guess)
 
         if guess not in chosen_word:
-            print(f"You chose {guess}." +
+            print(f"You chose {guess}. " +
                   "That's not in the word. You lose a life!")
             wrong_answers += 1
         print(wrong_answers)
