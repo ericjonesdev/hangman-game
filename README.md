@@ -3,7 +3,7 @@
 Welcome,
 
 Halloween Hangman is based on the well-known hangman game, where a user guesses a letter to try to figure out a randomly chosen word. You can
-view the live site [here](https://res.cloudinary.com/dxla1usfm/image/upload/v1697459161/Project3/Am-I-Responsive_FINAL_rewqww.png)
+view the live site [here](https://halloween-hangman-39dd7d1da1da.herokuapp.com/)
 
 ## Reminders
 
