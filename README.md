@@ -65,4 +65,20 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     - Where 2 players have the same score, the average of wrong answers is considered in order for the user with
     the least amount of wrong answers to be placed on the 'hilltop' sheet and their top score is shown to new users
     upon the initiation of game play. 
+- update_hilltop_data
+    - possibly the most difficult of the various functions, this method correctly retrieves information from the hangman
+    spreadsheet and compares to the current player statistics. If there is no hilltop(high scorer) upon entering a game,
+    this function places the current player information on the 'hilltop' sheet as the high score. Problems that were 
+    originally encountered centered on global variables and total_wrong_answer giving abnormal behavior. Other problems
+    were found in total_wrong_answers and games_played incrementing abnormally. Once 'duplicate' increment statements
+    were found and omitted, this function was able to work as expected.
+- get_and_update_games_played
+    - this function is straigh-forward in its approach and is confirmed to work as expected, through trial and error. 
+    It verifies if the current user has pre-existing records and, if so, helps to maintain a running count of games played.
+- average_score
+    - This functions main goal is to calculate the average score logic in order that the program can properly tabulate 
+    this data and add it to the hangman spreadsheet for record. It utilizes a for loop to iterate through the 
+    scores/players in the sheet, verify a possible match with the current user, and perform the calculation for the average 
+    score. A problem that was resolved is that it used to update the title column with the player information. Once the 
+    proper row was identified in the for loop, this function is confirmed to work as expected.
 
