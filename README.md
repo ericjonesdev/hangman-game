@@ -4,8 +4,14 @@
 
 Welcome,
 
-Halloween Hangman is based on the well-known hangman game, where a user guesses a letter to try to figure out a randomly chosen word. You can
-view the live site [here](https://halloween-hangman-39dd7d1da1da.herokuapp.com/)
+Halloween Hangman is a site based on the well-known hangman game, where a user guesses a letter 
+to try to figure out a randomly chosen word. It was built for online gaming enthusiast, 
+who also have a love for spelling and guessing games.  
+
+This is an excellent tool for parents, wishing to instruct their children in the practice of spelling and word comprehension.
+Feeling lucky? Want to prove your skill at spelling and language comprehension? Give it a try!
+
+You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokuapp.com/)
 
 ## Reminders
 
