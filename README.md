@@ -13,29 +13,17 @@ Feeling lucky? Want to prove your skill at spelling and language comprehension? 
 
 You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokuapp.com/)
 
-## Reminders
+## Features
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
-
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
----
-
-Happy coding!
+- Game Logic
+    - user is asked to input their name. This is used to store a user_name value to the external CSV sheet using the gspread module
+    - user is asked if they would like to view game statistics of the last 10 players
+        - if the user choice is yes, they are presented with the running list of last 10 players, their score , amount 
+        of games played and total amount of wrong answers per player.
+        - if the user choice is no, they are brought within the main game loop and asked to guess a letter.
+        - the user is presented with a blank underscore "_" representation of the randomly-chosen word.
+    - Upon guessing their first letter, the game logic iterates through the randomly-chosen word.
+        - if the letter the user chose is contained within the chosen word, the empty place-holder word is populated with
+        their letter choice.
+        - if the letter is not contained within the chosen_word, the user is informed of their mistake and 1 life is deducted
+        from their total 6 lives.
