@@ -36,3 +36,22 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
         - if the user answers no, the game completely exits
 - Halloween Hangman Flowchart Simplified:
     - ![Design Flow](https://res.cloudinary.com/dxla1usfm/image/upload/v1697462254/Project3/hangman_flow_chart_simplified_bb3afg.png)
+
+### Features left to implement
+
+- Ability for users to reset their game statistics, if desired
+
+## Testing
+
+- Testing across various viewport sizes
+    - it was confirmed that the hangman game is responsive across multiple screen sizes. This was
+    accomplished via playing the game on mobile, pad and desktop computer under various screen resolutions
+
+### Testing game features and logic
+
+- Input and Outputs
+    - painstaking confirmation, via pylint Code Institute linter was done to ensure that no code line over-exceeded
+    the PEP8 specifications. Were applicable, f-strings within input/output print statements were modeled
+    so as to make the user-experience seamless, in how the gaming questions appear on-screen.
+    
+
