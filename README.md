@@ -2,7 +2,8 @@
 
 Welcome,
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+Halloween Hangman is based on the well-known hangman game, where a user guesses a letter to try to figure out a randomly chosen word. You can
+view the live site [here](https://res.cloudinary.com/dxla1usfm/image/upload/v1697459161/Project3/Am-I-Responsive_FINAL_rewqww.png)
 
 ## Reminders
 
