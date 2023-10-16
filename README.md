@@ -58,5 +58,5 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     the last 10 players of the game. It is confirmed that if there has not been 10 players, it will out-
     put what it can access via the excel spreadsheet [hangman spreadsheet](https://docs.google.com/spreadsheets/d/1Lsa7wQwv7GQofjW7nQrEBdbmvGwen3nzPurr7diimTs/edit?pli=1#gid=460879778)
     - ### Hangman remote spreadsheet:
-        - [spreadsheet](https://res.cloudinary.com/dxla1usfm/image/upload/v1697452135/Project3/hangman_user_scores-Google-Sheets_vex3vp.png)
+        - ![spreadsheet](https://res.cloudinary.com/dxla1usfm/image/upload/v1697452135/Project3/hangman_user_scores-Google-Sheets_vex3vp.png)
 
