@@ -27,3 +27,10 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
         their letter choice.
         - if the letter is not contained within the chosen_word, the user is informed of their mistake and 1 life is deducted
         from their total 6 lives.
+        - if the user is able to successfully guess the chosen_word, they are informed of this and a printout of
+        their total_wrong_answers and games_played is shown to them, along with the declaration of the correct word.
+        - if the user loses thier 6 lives, the correct word is shown to them, they are informed of their mistake,
+        and the game round exits. 
+    - The user is asked if they would like to play another game.
+        - if the user answers in the affirmative, they are taken back through the game loop.
+        - if the user answers no, the game completely exits
