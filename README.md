@@ -59,4 +59,10 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     put what it can access via the excel spreadsheet [hangman spreadsheet](https://docs.google.com/spreadsheets/d/1Lsa7wQwv7GQofjW7nQrEBdbmvGwen3nzPurr7diimTs/edit?pli=1#gid=460879778)
     - ### Hangman remote spreadsheet:
         - ![spreadsheet](https://res.cloudinary.com/dxla1usfm/image/upload/v1697452135/Project3/hangman_user_scores-Google-Sheets_vex3vp.png)
+    - As can be seen in the above graphic, some user information is missing from the score column. This was due to contant bug 
+    reworkings, in order that the proper score could be tabulated. The 'score' variable is tabulated as follows:
+    score = total_wrong_answers / games_played
+    - Where 2 players have the same score, the average of wrong answers is considered in order for the user with
+    the least amount of wrong answers to be placed on the 'hilltop' sheet and their top score is shown to new users
+    upon the initiation of game play. 
 
