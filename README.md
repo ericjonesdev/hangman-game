@@ -34,3 +34,5 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     - The user is asked if they would like to play another game.
         - if the user answers in the affirmative, they are taken back through the game loop.
         - if the user answers no, the game completely exits
+- Halloween Hangman Flowchart Simplified:
+    - ![Design Flow](https://res.cloudinary.com/dxla1usfm/image/upload/v1697462254/Project3/hangman_flow_chart_simplified_bb3afg.png)
