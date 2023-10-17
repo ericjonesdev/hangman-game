@@ -104,5 +104,13 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
 
 ![CSS Validation](https://res.cloudinary.com/dxla1usfm/image/upload/v1697463271/Project3/W3C-CSS-Validator-results-for-https-halloween-hangman-39dd7d1da1da-herokuapp-com-CSS-level-3-SVG-_pk2icu.png)
 
+## Unfixed bugs
+
+- The functionality for hilltop score, best games out of the average of total_wrong_answers may not work completely as expected, however, do to time constraints, the decision was made to 'stop in place', 
+for the sake of maintaining code integrity, throughout the rest of the code base. In the future, this
+will be re-tested and confirmed. Check back for updates in the future.
+
+
+
 
 
