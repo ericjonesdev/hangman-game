@@ -81,4 +81,18 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     scores/players in the sheet, verify a possible match with the current user, and perform the calculation for the average 
     score. A problem that was resolved is that it used to update the title column with the player information. Once the 
     proper row was identified in the for loop, this function is confirmed to work as expected.
+- clear 
+    - This function successfully clears the screen, allowing the user to concentrate on the
+    gameplay, minus the previous welcome screen.
+- play_game
+    - This is the main gameply function that successfully orchestrates a while loop
+    keeping the player in gameplay until the user decides to quit. The functionality
+    to continue playing has been tested and confirmed to be operating normally.
+- initialize_game
+    - Tested the introductory game logic that brings the user within the game. The
+    questions regarding username and the ability to view the game high score all work
+    as expected.
+- main
+    - The main function is tested and works as expected, to call the intialize game function to 
+    start the player off within the game.
 
