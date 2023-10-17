@@ -96,7 +96,7 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     - The main function is tested and works as expected, to call the intialize game function to 
     start the player off within the game.
 
-## Validator Testing
+### Validator Testing
 
 - W3Schools HTML and CSS validators where used to verify code integrity:
 
@@ -104,11 +104,28 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
 
 ![CSS Validation](https://res.cloudinary.com/dxla1usfm/image/upload/v1697463271/Project3/W3C-CSS-Validator-results-for-https-halloween-hangman-39dd7d1da1da-herokuapp-com-CSS-level-3-SVG-_pk2icu.png)
 
-## Unfixed bugs
+### Unfixed bugs
 
 - The functionality for hilltop score, best games out of the average of total_wrong_answers may not work completely as expected, however, do to time constraints, the decision was made to 'stop in place', 
 for the sake of maintaining code integrity, throughout the rest of the code base. In the future, this
 will be re-tested and confirmed. Check back for updates in the future.
+
+## Deployment
+- The site was deployed via an primary implementation in Github and hosting on Heroku. 
+The steps are as follows:
+    - In the Github repository, click the green 'Code' button to reveal the https:// url of your repo.
+    copy this repo.
+    - Take the copied repo link and navigate to app.codeanywhere.com. 
+    - In CodeAnywhere site, click on the 'new workspace' button and past in your Github repository
+    link. Click 'create new workspace'.
+    - Upon your final commit and push of your code to Github, navigate to Heroku.com.
+    - Click 'create new app'. Upon creation of your app, navigate to settings. In the settings,
+    configure your config vars variables and click save.
+    - Click the 'deploy' tab. Once there, connect your Github repository, by clicking the connect
+    button for Github icon.
+    - Choose your project repository.
+    - Click 'deploy branch'.
+    - View your finalized app.
 
 
 
