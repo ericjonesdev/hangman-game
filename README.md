@@ -127,6 +127,16 @@ The steps are as follows:
     - Click 'deploy branch'.
     - View your finalized app.
 
+## Credits
+
+- The basic and original game logic and code was taken from a mini project of the popular Udemy.com course
+"100 Days of Code: The Complete Python Pro Bootcamp for 2023" by Dr. Angela Yu.
+[100 days of code](https://www.udemy.com/course/100-days-of-code/learn/lecture/19141072#overview)
+- The introductory 'amIresponsive' image was created using the AmIResponsive web app:
+[amIResponsive](https://ui.dev/amiresponsive)
+- The Halloween Hangman site background logo is an original image created using the Canva platform.
+[Canva Creatives](https://www.canva.com/)
+
 
 
 
