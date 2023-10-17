@@ -96,3 +96,13 @@ You can view the live site [here](https://halloween-hangman-39dd7d1da1da.herokua
     - The main function is tested and works as expected, to call the intialize game function to 
     start the player off within the game.
 
+## Validator Testing
+
+- W3Schools HTML and CSS validators where used to verify code integrity:
+
+![HTML Validation](https://res.cloudinary.com/dxla1usfm/image/upload/v1697463201/Project3/Showing-results-for-https-halloween-hangman-39dd7d1da1da-herokuapp-com-Nu-Html-Checker_knhyw9.png)
+
+![CSS Validation](https://res.cloudinary.com/dxla1usfm/image/upload/v1697463271/Project3/W3C-CSS-Validator-results-for-https-halloween-hangman-39dd7d1da1da-herokuapp-com-CSS-level-3-SVG-_pk2icu.png)
+
+
+
