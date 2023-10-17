@@ -141,6 +141,8 @@ The steps are as follows:
 - The external Google Spreadsheet is hosted by Google and utilizes Google's cloud products:
 [GoogleSpreadsheet](https://docs.google.com/spreadsheets/d/1Lsa7wQwv7GQofjW7nQrEBdbmvGwen3nzPurr7diimTs/edit?usp=sharing)
 [GoogleCloud](https://console.cloud.google.com/home/dashboard?project=hangmangame-400613)
+- Project 3 Code Institute Template was used for the 'bare bones' code and packages, required to run this project:
+[CodeInstitueProject3Template](https://github.com/Code-Institute-Org/p3-template)
 
 ### Mentorship
 - I would also like to thank my mentor Elaine for all her help and support getting me up to this point. My family also played a role in mentoring me, by always giving me support and motivation to continue on. I am forever grateful.
