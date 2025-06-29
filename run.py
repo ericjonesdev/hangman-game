@@ -5,6 +5,7 @@ from hangman_words import word_list
 import random
 import os
 import sys
+import json
 
 def get_input(prompt, input_type="text"):
     """
@@ -29,6 +30,11 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
 ]
+
+creds_json = os.getenv('GOOGLE_CREDS')
+if not creds_json:
+    print("ERROR: Google Sheets credentials not found!")
+    sys.exit(1)
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
