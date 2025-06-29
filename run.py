@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import gspread
 from google.oauth2.service_account import Credentials
 from hangman_art import stages, logo
@@ -326,9 +327,13 @@ def main():
 
 
 if __name__ == "__main__":
-    # Ensure unbuffered output for Render
+    # Simplified Render detection and output handling
     import os
-    import sys
-    if 'RENDER' in os.environ:  # Detect if running on Render
-        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # Unbuffered
+    if 'RENDER' in os.environ:
+        # For Render, ensure immediate output
+        import sys
+        sys.stdout.flush()
+        sys.stderr.flush()
+    
+    # Start the game
     main()
