@@ -5,6 +5,7 @@ from hangman_words import word_list
 import random
 import os
 import sys
+import logging
 
 def get_input(prompt, input_type="text"):
     """
@@ -270,31 +271,64 @@ def initialize_game():
 
 def main():
     '''
-    Initialize game function
+    Main game function with added logging for deployment debugging
     '''
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[logging.StreamHandler()]
+    )
 
-    initialize_game()
+    try:
+        logging.info("=== Starting Hangman Game ===")
+        logging.info("Initializing game...")
+        initialize_game()
 
-    while True:
-        games_played = get_and_update_games_played(player_name)
+        while True:
+            try:
+                logging.info(f"Starting game for player: {player_name}")
+                games_played = get_and_update_games_played(player_name)
+                logging.debug(f"Games played: {games_played}")
 
-        play_game()
+                logging.info("Starting gameplay...")
+                play_game()
 
-        average_score(player_name, total_wrong_answers)
-        update_hilltop_score(player_name, total_wrong_answers, games_played)
+                logging.info("Calculating scores...")
+                avg_score = average_score(player_name, total_wrong_answers)
+                logging.debug(f"Average score: {avg_score}")
+                
+                logging.info("Updating leaderboard...")
+                update_hilltop_score(player_name, total_wrong_answers, games_played)
 
-        play_again = get_input("Do you want to play again? (yes/no): ").lower()
+                play_again = get_input("Do you want to play again? (yes/no): ").lower()
+                while play_again not in ["yes", "no"]:
+                    logging.warning(f"Invalid input received: {play_again}")
+                    print("Invalid input! Please enter 'yes' or 'no'.")
+                    play_again = get_input("Do you want to play again? (yes/no):\n ").lower()
 
-        while play_again not in ["yes", "no"]:
-            print("Invalid input! Please enter 'yes' or 'no'.")
-            play_again = get_input("Do you want\
-                 to play again? (yes/no):\n ").lower()
+                if play_again != "yes":
+                    logging.info("Player chose to exit game")
+                    break
 
-        if play_again != "yes":
-            break
+            except Exception as game_loop_error:
+                logging.error(f"Error during game loop: {str(game_loop_error)}", exc_info=True)
+                print("An error occurred. Restarting game...")
+                continue
 
-    print("Thanks for playing!")
+    except Exception as main_error:
+        logging.critical(f"Fatal error: {str(main_error)}", exc_info=True)
+        raise  # Re-raise to ensure Render shows this in logs
+
+    finally:
+        logging.info("=== Game session ended ===")
+        print("Thanks for playing!")
 
 
 if __name__ == "__main__":
+    # Ensure unbuffered output for Render
+    import os
+    import sys
+    if 'RENDER' in os.environ:  # Detect if running on Render
+        sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # Unbuffered
     main()
