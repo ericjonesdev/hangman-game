@@ -6,6 +6,17 @@ import random
 import os
 import sys
 
+def get_input(prompt):
+    """Universal input handler that works everywhere"""
+    try:
+        if sys.stdin and sys.stdin.isatty():  # True in local terminals
+            return input(prompt)
+        else:  # For Render/Heroku
+            print(prompt, end='', flush=True)
+            return sys.stdin.readline().strip() or "Player1"
+    except Exception:
+        return "Player1"  # Fallback
+
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -23,16 +34,6 @@ hilltop = SHEET.worksheet('hilltop')
 data = gamers.get_all_values()
 
 data2 = hilltop.get_all_values()
-
-def get_input(prompt):
-    """Handles input for both local and Render environments."""
-    try:
-        return input(prompt)
-    except EOFError:
-        # For Render background worker
-        print("\n[System] Using test player name 'Player1'")
-        return "Player1"  # Default name for non-interactive environments
-
 
 def view_game_stats():
 
