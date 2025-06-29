@@ -204,41 +204,42 @@ def play_game():
     lives = 6
     wrong_answers = 0
     display = ["_"] * word_length
-    you_chose = []
+    guessed_letters = []  # Track guessed letters
 
-    while not end_of_game and lives > 0:
-        print(f"\n{' '.join(display)}")
-        print(stages[lives])  # Show hangman art first
+    while not end_of_game:
+        print('\n' + ' '.join(display))
+        print(stages[lives])
 
-        guess = get_input("Guess a letter: ", "letter")
+        # Get valid letter input
+        while True:
+            guess = get_input("Guess a letter: ", "letter").lower()
+            if not guess:
+                print("Please enter a single letter.")
+                continue
+            if guess in guessed_letters:
+                print(f"You already guessed '{guess}'. Try a different letter.")
+                continue
+            break  # Valid new guess
+
+        guessed_letters.append(guess)
         clear()
 
-        if not guess:  # Skip if invalid input
-            continue
-
-        if guess in you_chose:
-            print(f"You already guessed '{guess}'. Try again.")
-            continue
-
-        you_chose.append(guess)
-
         if guess in chosen_word:
-            print(f"Correct! '{guess}' is in the word.")
-            for i, letter in enumerate(chosen_word):
-                if letter == guess:
-                    display[i] = letter
+            print(f"Good guess! '{guess}' is in the word.")
+            for position in range(word_length):
+                if chosen_word[position] == guess:
+                    display[position] = guess
         else:
-            print(f"Wrong! '{guess}' is not in the word. You lose a life.")
+            print(f"Sorry, '{guess}' is not in the word. You lose a life!")
             lives -= 1
             wrong_answers += 1
+            if lives == 0:
+                end_of_game = True
+                print(f"Game over! The word was: {chosen_word}")
 
         if "_" not in display:
             end_of_game = True
-            print(f"\nYou won! The word was: {chosen_word}")
-        
-        if lives <= 0:
-            end_of_game = True
-            print(f"\nYou lost! The word was: {chosen_word}")
+            print(f"Congratulations! You guessed the word: {chosen_word}")
 
     total_wrong_answers += wrong_answers
 
