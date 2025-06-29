@@ -8,8 +8,8 @@ import sys
 
 def get_input(prompt, input_type="text"):
     """
-    Universal input handler with strict yes/no validation
-    input_type: "text" (for names) or "yn" (for yes/no)
+    Universal input handler with strict validation
+    input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
     """
     try:
         if sys.stdin and sys.stdin.isatty():  # Local terminal
@@ -21,12 +21,14 @@ def get_input(prompt, input_type="text"):
         if input_type == "yn":
             if response in ("yes", "y"):
                 return "yes"
-            elif response in ("no", "n"):
-                return "no"
-            return "no"  # Default for invalid/missing input
+            return "no"
+        elif input_type == "letter":
+            if len(response) == 1 and response.isalpha():
+                return response
+            return ""  # Force re-prompt
         return response or "Player1"  # Default for text input
     except Exception:
-        return "no" if input_type == "yn" else "Player1"
+        return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -211,23 +213,25 @@ def play_game():
 
         print(' '.join(display))
 
-        guess = get_input("Guess a letter:\n ").lower()
-        clear()
-
-        # Check if the user's input is a valid letter
-        if not guess.isalpha() or len(guess) != 1:
+        # Get valid letter input
+        while True:
+            guess = get_input("Guess a letter:\n ", "letter")
+            if guess:
+                break
             print("Please enter a valid single letter.")
-            continue
+        
+        clear()
 
         if guess in you_chose:
             print(f"You chose {guess}. You already guessed that.")
-        else:
-            you_chose.append(guess)
+            continue
+
+        you_chose.append(guess)
 
         if guess not in chosen_word:
-            print(f"You chose {guess}. " +
-                  "That's not in the word. You lose a life!")
+            print(f"You chose {guess}. That's not in the word. You lose a life!")
             wrong_answers += 1
+            lives -= 1
         print(wrong_answers)
 
         # Check guessed letter
