@@ -11,27 +11,36 @@ def get_input(prompt, input_type="text"):
     Universal input handler with strict validation
     input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
     """
-    try:
-        # For Render/Heroku, we need to handle input differently
-        if not sys.stdin.isatty():
+    max_attempts = 3  # Prevent infinite loops
+    attempts = 0
+    
+    while attempts < max_attempts:
+        try:
             print(prompt, end='', flush=True)
-            response = sys.stdin.readline().strip().lower()
-        else:
-            response = input(prompt).strip().lower()
-        
-        if input_type == "yn":
-            if response in ("yes", "y"):
-                return "yes"
-            return "no"
-        elif input_type == "letter":
-            if len(response) == 1 and response.isalpha():
-                return response
-            print("Please enter a valid single letter.")
-            return ""  # Force re-prompt
-        return response or "Player1"  # Default for text input
-    except Exception as e:
-        print(f"Error in input: {e}")
-        return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
+            response = input().strip().lower()  # Always use input()
+            
+            if input_type == "yn":
+                if response in ("yes", "y"):
+                    return "yes"
+                elif response in ("no", "n"):
+                    return "no"
+                print("Please enter 'yes' or 'no'.")
+            
+            elif input_type == "letter":
+                if len(response) == 1 and response.isalpha():
+                    return response
+                print("Please enter a single letter (a-z).")
+            
+            else:  # text input
+                return response or "Player1"  # Default name
+            
+            attempts += 1
+        except EOFError:  # Handle cases where input isn't available
+            print("\nInput error. Using default value.")
+            return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
+    
+    # After max attempts, return a default
+    return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -195,43 +204,39 @@ def play_game():
     display = ["_"] * word_length
     you_chose = []
 
-    while not end_of_game:
-        print(' '.join(display))
+    while not end_of_game and lives > 0:
+        print(f"\n{' '.join(display)}")
+        print(stages[lives])  # Show hangman art first
 
-        # Get valid letter input
-        while True:
-            guess = get_input("Guess a letter:\n", "letter")
-            if guess:  # Only proceed if we got a valid letter
-                break
-        
+        guess = get_input("Guess a letter: ", "letter")
         clear()
 
+        if not guess:  # Skip if invalid input
+            continue
+
         if guess in you_chose:
-            print(f"You chose {guess}. You already guessed that.")
+            print(f"You already guessed '{guess}'. Try again.")
             continue
 
         you_chose.append(guess)
 
-        if guess not in chosen_word:
-            print(f"You chose {guess}. That's not in the word. You lose a life!")
-            wrong_answers += 1
-            lives -= 1
-            if lives == 0:
-                end_of_game = True
-                print(f"{chosen_word} is what you were looking for. You Lose!!")
-        else:
-            # Check guessed letter
-            for position in range(word_length):
-                letter = chosen_word[position]
+        if guess in chosen_word:
+            print(f"Correct! '{guess}' is in the word.")
+            for i, letter in enumerate(chosen_word):
                 if letter == guess:
-                    display[position] = letter
+                    display[i] = letter
+        else:
+            print(f"Wrong! '{guess}' is not in the word. You lose a life.")
+            lives -= 1
+            wrong_answers += 1
 
-        # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
-            print(f"You correctly guessed {chosen_word} You Win!!")
-
-        print(stages[lives])
+            print(f"\nYou won! The word was: {chosen_word}")
+        
+        if lives <= 0:
+            end_of_game = True
+            print(f"\nYou lost! The word was: {chosen_word}")
 
     total_wrong_answers += wrong_answers
 
