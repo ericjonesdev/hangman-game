@@ -233,29 +233,38 @@ def play_game():
 
 def initialize_game():
     global player_name, total_wrong_answers
-
-    print(logo)
-
-    if len(data2) > 1:
-        player = hilltop.col_values(1)[1]
-        high_score = hilltop.col_values(2)[1]
-        print(f"Top Scorer:-{player} Score:{high_score}")
-    else:
-        print("No high scores yet!")
-
-    player_name = get_input("What is your name?:\n ", "text")
-
-    # Initialize the total wrong answers
-    total_wrong_answers = 0
-
-    # Prompt user to view game stats - WITH VALIDATION LOOP
+    
+    # Force immediate output in Render
+    import sys
+    sys.stdout.flush()
+    
+    # Print logo and ensure it appears
+    print(logo, flush=True)
+    
+    # Show high score if available
+    try:
+        if len(data2) > 1:
+            player = hilltop.col_values(1)[1]
+            high_score = hilltop.col_values(2)[1]
+            print(f"Top Scorer: {player} Score: {high_score}", flush=True)
+        else:
+            print("No high scores yet!", flush=True)
+    except Exception as e:
+        print(f"Couldn't load high scores: {str(e)}", flush=True)
+    
+    # Get player name with forced output
+    player_name = get_input("What is your name?:\n", "text")
+    print(f"Welcome, {player_name}!", flush=True)
+    
+    # View stats prompt
     while True:
-        view_stats = get_input("Would you like to view game stats of the last 10 players? (yes/no):\n ", "yn")
+        view_stats = get_input("View last 10 players' stats? (yes/no):\n", "yn")
         if view_stats == "yes":
             view_game_stats()
             break
         elif view_stats == "no":
             break
+        print("Please answer 'yes' or 'no'.", flush=True)
 
 
 def main():
@@ -270,7 +279,16 @@ def main():
     )
 
     try:
+        # Configure unbuffered output for Render
+        import os
+        import sys
+        if 'RENDER' in os.environ:
+            sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
+            sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', buffering=1)
+
         logging.info("=== Starting Hangman Game ===")
+        print(logo, flush=True)  # Force logo to appear immediately
+        
         logging.info("Initializing game...")
         initialize_game()
 
@@ -290,10 +308,12 @@ def main():
                 logging.info("Updating leaderboard...")
                 update_hilltop_score(player_name, total_wrong_answers, games_played)
 
+                # Get play again input with forced output
+                print("", flush=True)  # Ensure prompt appears
                 play_again = get_input("Do you want to play again? (yes/no): ").lower()
                 while play_again not in ["yes", "no"]:
                     logging.warning(f"Invalid input received: {play_again}")
-                    print("Invalid input! Please enter 'yes' or 'no'.")
+                    print("Invalid input! Please enter 'yes' or 'no'.", flush=True)
                     play_again = get_input("Do you want to play again? (yes/no):\n ").lower()
 
                 if play_again != "yes":
@@ -302,26 +322,23 @@ def main():
 
             except Exception as game_loop_error:
                 logging.error(f"Error during game loop: {str(game_loop_error)}", exc_info=True)
-                print("An error occurred. Restarting game...")
+                print("An error occurred. Restarting game...", flush=True)
                 continue
 
     except Exception as main_error:
         logging.critical(f"Fatal error: {str(main_error)}", exc_info=True)
+        print(f"Fatal error occurred: {str(main_error)}", flush=True)
         raise  # Re-raise to ensure Render shows this in logs
 
     finally:
         logging.info("=== Game session ended ===")
-        print("Thanks for playing!")
+        print("Thanks for playing!", flush=True)
 
 
 if __name__ == "__main__":
-    # Simplified Render detection and output handling
+    # Set PYTHONUNBUFFERED environment variable
     import os
-    if 'RENDER' in os.environ:
-        # For Render, ensure immediate output
-        import sys
-        sys.stdout.flush()
-        sys.stderr.flush()
+    os.environ['PYTHONUNBUFFERED'] = '1'
     
     # Start the game
     main()
