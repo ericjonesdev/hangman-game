@@ -12,11 +12,12 @@ def get_input(prompt, input_type="text"):
     input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
     """
     try:
-        if sys.stdin and sys.stdin.isatty():  # Local terminal
-            response = input(prompt).strip().lower()
-        else:  # For Render/Heroku
+        # For Render/Heroku, we need to handle input differently
+        if not sys.stdin.isatty():
             print(prompt, end='', flush=True)
             response = sys.stdin.readline().strip().lower()
+        else:
+            response = input(prompt).strip().lower()
         
         if input_type == "yn":
             if response in ("yes", "y"):
@@ -25,9 +26,11 @@ def get_input(prompt, input_type="text"):
         elif input_type == "letter":
             if len(response) == 1 and response.isalpha():
                 return response
+            print("Please enter a valid single letter.")
             return ""  # Force re-prompt
         return response or "Player1"  # Default for text input
-    except Exception:
+    except Exception as e:
+        print(f"Error in input: {e}")
         return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
 
 SCOPE = [
@@ -182,43 +185,24 @@ def clear():
 
 
 def play_game():
-
-    '''
-    Function for main gameplay logic
-    '''
-
     global total_wrong_answers
 
     chosen_word = random.choice(word_list)
     word_length = len(chosen_word)
     end_of_game = False
-
-    # Create a variable called 'lives' to keep
-    # track of the number of lives left.
-    # Set 'lives' to equal 6.
-
     lives = 6
     wrong_answers = 0
-    # Create blanks to illustrate blank word choice
-    display = []
-    for _ in range(word_length):
-        display += "_"
-
+    display = ["_"] * word_length
     you_chose = []
 
-    # loop to keep game going while condition
-    # 'end_of_game' is equal to False
-
     while not end_of_game:
-
         print(' '.join(display))
 
         # Get valid letter input
         while True:
-            guess = get_input("Guess a letter:\n ", "letter")
-            if guess:
+            guess = get_input("Guess a letter:\n", "letter")
+            if guess:  # Only proceed if we got a valid letter
                 break
-            print("Please enter a valid single letter.")
         
         clear()
 
@@ -232,34 +216,21 @@ def play_game():
             print(f"You chose {guess}. That's not in the word. You lose a life!")
             wrong_answers += 1
             lives -= 1
-        print(wrong_answers)
-
-        # Check guessed letter
-        for position in range(word_length):
-            letter = chosen_word[position]
-
-            if letter == guess:
-                display[position] = letter
-
-        # If guess is not a letter in the chosen_word,
-        # then reduce the amount of lives by 1.
-        # When lives go down to 0, game is over and "You lose" is printed
-        if guess not in chosen_word:
-            lives -= 1
             if lives == 0:
                 end_of_game = True
-                print(f"{chosen_word} is what" +
-                      " you were looking for. You Lose!!")
+                print(f"{chosen_word} is what you were looking for. You Lose!!")
+        else:
+            # Check guessed letter
+            for position in range(word_length):
+                letter = chosen_word[position]
+                if letter == guess:
+                    display[position] = letter
 
         # Check if user has got all letters
         if "_" not in display:
             end_of_game = True
-            print(f"You correctly guessed {chosen_word} " +
-                  "You Win!!")
+            print(f"You correctly guessed {chosen_word} You Win!!")
 
-        # Print the ASCII art from 'stages' that corresponds
-        # to the current number of 'lives'
-        # the user has remaining
         print(stages[lives])
 
     total_wrong_answers += wrong_answers
