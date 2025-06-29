@@ -5,7 +5,6 @@ from hangman_words import word_list
 import random
 import os
 import sys
-import logging
 
 def get_input(prompt, input_type="text"):
     """
@@ -13,12 +12,7 @@ def get_input(prompt, input_type="text"):
     input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
     """
     try:
-        # For Render/Heroku environments
-        if not sys.stdin.isatty():
-            print(prompt, end='', flush=True)
-            response = sys.stdin.readline().strip().lower()
-        else:
-            response = input(prompt).strip().lower()
+        response = input(prompt).strip().lower()
         
         if input_type == "yn":
             return "yes" if response in ("yes", "y") else "no"
@@ -45,54 +39,35 @@ gamers = SHEET.worksheet('gamers')
 hilltop = SHEET.worksheet('hilltop')
 
 data = gamers.get_all_values()
-
 data2 = hilltop.get_all_values()
 
 def view_game_stats():
-
     '''
     Function to display game statistics of the last 10 players.
     '''
-
     print("\nGame Stats of the Last 10 Players:")
     print("-----------------------------------")
 
-    # Display only the last 10 players
-
     user_data = data[-10:]
-
     for user in user_data:
-
         username, score, games_played, total_wrong_answers = user
         print(f"Name: {username}, Score: {score},"
               f" Games Played: {games_played},"
               f" Wrong Answers: {total_wrong_answers}")
 
-
 def update_hilltop_score(player_name, total_wrong_answers, games_played):
-
     '''
     Function to get and update the best player score
     '''
+    print(f"Total Wrong Answers: {total_wrong_answers}, Games Played: {games_played}")
 
-    # Print the updated total wrong answers and games played
-    print(f"Total Wrong Answers: {total_wrong_answers}, \
-    Games Played: {games_played}")
-
-    # Calculate the new score
-    if games_played > 0:
-        new_score = total_wrong_answers / games_played
-    else:
-        new_score = 0
-
+    new_score = total_wrong_answers / games_played if games_played > 0 else 0
     hilltop_data = hilltop.get_all_records()
 
-    # If hilltop sheet is empty, add the current player's data
     if not hilltop_data:
         hilltop.append_row([player_name, new_score])
         return
 
-    # Identify the player with the lowest high_score
     min_score = float('inf')
     min_score_player = None
 
@@ -100,11 +75,7 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
         if float(player['high_score']) < min_score:
             min_score = float(player['high_score'])
             min_score_player = player['user_name']
-        # If two players have the same high_score, prioritize based on the
-        # #average of wrong answers
         elif float(player['high_score']) == min_score:
-            # Fetch the other player's total_wrong_answers and games_played
-            # #from the 'gamers' sheet
             for record in data:
                 if record[0] == player['user_name']:
                     other_player_avg = int(record[3]) / int(record[2])
@@ -113,54 +84,31 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
                         min_score = new_score
                         min_score_player = player_name
 
-    # If the current player's score is better than or equal to the lowest
-    # #high_score in hilltop sheet, update the sheet
     if new_score <= min_score:
-        # Find the row of the player with the lowest high_score and update it
         for i, player in enumerate(hilltop_data, start=2):
             if player['user_name'] == min_score_player:
                 hilltop.update_cell(i, 1, player_name)
                 hilltop.update_cell(i, 2, str(new_score))
                 break
 
-
 def get_and_update_games_played(player_name):
-
     '''
     Function to update games played
     '''
-
     records = gamers.get_all_records()
-
-    # Search for the player's record
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
             new_games_played = record['games_played'] + 1
             gamers.update_cell(idx, 3, new_games_played)
             return new_games_played
 
-    # If player is not found, add them to the sheet with 1 game played
-    # and return 1
     gamers.append_row([player_name, None, 1, 0])
     return 1
 
-# Word list is pulling in words from import statement
-
-
-word_list = word_list
-
-
-games_played = 0
-wrong_answers = 0
-total_wrong_answers = 0
-
-
 def average_score(player_name, total_wrong_answers=0):
-
     '''
     Function to calculate average score
     '''
-
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
@@ -171,19 +119,14 @@ def average_score(player_name, total_wrong_answers=0):
             return score
     return None
 
-
 def clear():
-
     '''
     Function to clear the user screen for usability
     '''
-
     os.system('cls' if os.name == 'nt' else 'clear')
-
 
 def play_game():
     global total_wrong_answers
-
     chosen_word = random.choice(word_list)
     word_length = len(chosen_word)
     end_of_game = False
@@ -196,7 +139,6 @@ def play_game():
         print('\n' + ' '.join(display))
         print(stages[lives])
 
-        # Get valid letter input
         while True:
             guess = get_input("Guess a letter: ", "letter")
             if guess is None:
@@ -205,7 +147,7 @@ def play_game():
             if guess in guessed_letters:
                 print(f"You already guessed '{guess}'. Try a different letter.")
                 continue
-            break  # Valid new guess
+            break
 
         guessed_letters.append(guess)
         clear()
@@ -229,33 +171,24 @@ def play_game():
 
     total_wrong_answers += wrong_answers
 
-
 def initialize_game():
     global player_name, total_wrong_answers
     
-    # Force immediate output in Render
-    import sys
-    sys.stdout.flush()
+    print(logo)
     
-    # Print logo and ensure it appears
-    print(logo, flush=True)
-    
-    # Show high score if available
     try:
         if len(data2) > 1:
             player = hilltop.col_values(1)[1]
             high_score = hilltop.col_values(2)[1]
-            print(f"Top Scorer: {player} Score: {high_score}", flush=True)
+            print(f"Top Scorer: {player} Score: {high_score}")
         else:
-            print("No high scores yet!", flush=True)
+            print("No high scores yet!")
     except Exception as e:
-        print(f"Couldn't load high scores: {str(e)}", flush=True)
+        print(f"Couldn't load high scores: {str(e)}")
     
-    # Get player name with forced output
     player_name = get_input("What is your name?:\n", "text")
-    print(f"Welcome, {player_name}!", flush=True)
+    print(f"Welcome, {player_name}!")
     
-    # View stats prompt
     while True:
         view_stats = get_input("View last 10 players' stats? (yes/no):\n", "yn")
         if view_stats == "yes":
@@ -263,81 +196,29 @@ def initialize_game():
             break
         elif view_stats == "no":
             break
-        print("Please answer 'yes' or 'no'.", flush=True)
-
+        print("Please answer 'yes' or 'no'.")
 
 def main():
     '''
-    Main game function with added logging for deployment debugging
+    Initialize game function
     '''
-    import logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[logging.StreamHandler()]
-    )
+    initialize_game()
 
-    try:
-        # Configure unbuffered output for Render
-        import os
-        import sys
-        if 'RENDER' in os.environ:
-            sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1)
-            sys.stderr = os.fdopen(sys.stderr.fileno(), 'w', buffering=1)
+    while True:
+        games_played = get_and_update_games_played(player_name)
+        play_game()
+        average_score(player_name, total_wrong_answers)
+        update_hilltop_score(player_name, total_wrong_answers, games_played)
 
-        logging.info("=== Starting Hangman Game ===")
-        print(logo, flush=True)  # Force logo to appear immediately
-        
-        logging.info("Initializing game...")
-        initialize_game()
+        play_again = get_input("Do you want to play again? (yes/no): ").lower()
+        while play_again not in ["yes", "no"]:
+            print("Invalid input! Please enter 'yes' or 'no'.")
+            play_again = get_input("Do you want to play again? (yes/no):\n ").lower()
 
-        while True:
-            try:
-                logging.info(f"Starting game for player: {player_name}")
-                games_played = get_and_update_games_played(player_name)
-                logging.debug(f"Games played: {games_played}")
+        if play_again != "yes":
+            break
 
-                logging.info("Starting gameplay...")
-                play_game()
-
-                logging.info("Calculating scores...")
-                avg_score = average_score(player_name, total_wrong_answers)
-                logging.debug(f"Average score: {avg_score}")
-                
-                logging.info("Updating leaderboard...")
-                update_hilltop_score(player_name, total_wrong_answers, games_played)
-
-                # Get play again input with forced output
-                print("", flush=True)  # Ensure prompt appears
-                play_again = get_input("Do you want to play again? (yes/no): ").lower()
-                while play_again not in ["yes", "no"]:
-                    logging.warning(f"Invalid input received: {play_again}")
-                    print("Invalid input! Please enter 'yes' or 'no'.", flush=True)
-                    play_again = get_input("Do you want to play again? (yes/no):\n ").lower()
-
-                if play_again != "yes":
-                    logging.info("Player chose to exit game")
-                    break
-
-            except Exception as game_loop_error:
-                logging.error(f"Error during game loop: {str(game_loop_error)}", exc_info=True)
-                print("An error occurred. Restarting game...", flush=True)
-                continue
-
-    except Exception as main_error:
-        logging.critical(f"Fatal error: {str(main_error)}", exc_info=True)
-        print(f"Fatal error occurred: {str(main_error)}", flush=True)
-        raise  # Re-raise to ensure Render shows this in logs
-
-    finally:
-        logging.info("=== Game session ended ===")
-        print("Thanks for playing!", flush=True)
-
+    print("Thanks for playing!")
 
 if __name__ == "__main__":
-    # Set PYTHONUNBUFFERED environment variable
-    import os
-    os.environ['PYTHONUNBUFFERED'] = '1'
-    
-    # Start the game
     main()
