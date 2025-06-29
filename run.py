@@ -269,7 +269,7 @@ def initialize_game():
 
     # Prompt user to view game stats
     while True:
-        view_stats = input("Would you like to view game stats" +
+        view_stats = get_input("Would you like to view game stats" +
                            "of the last 10 players? (yes/no):\n ").lower()
         if view_stats == "yes":
             view_game_stats()
@@ -299,7 +299,7 @@ def main():
 
         while play_again not in ["yes", "no"]:
             print("Invalid input! Please enter 'yes' or 'no'.")
-            play_again = input("Do you want\
+            play_again = get_input("Do you want\
                  to play again? (yes/no):\n ").lower()
 
         if play_again != "yes":
