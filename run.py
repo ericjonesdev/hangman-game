@@ -13,36 +13,23 @@ def get_input(prompt, input_type="text"):
     Universal input handler with strict validation
     input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
     """
-    max_attempts = 3  # Prevent infinite loops
-    attempts = 0
-    
-    while attempts < max_attempts:
-        try:
+    try:
+        # For Render/Heroku environments
+        if not sys.stdin.isatty():
             print(prompt, end='', flush=True)
-            response = input().strip().lower()  # Always use input()
-            
-            if input_type == "yn":
-                if response in ("yes", "y"):
-                    return "yes"
-                elif response in ("no", "n"):
-                    return "no"
-                print("Please enter 'yes' or 'no'.")
-            
-            elif input_type == "letter":
-                if len(response) == 1 and response.isalpha():
-                    return response
-                print("Please enter a single letter (a-z).")
-            
-            else:  # text input
-                return response or "Player1"  # Default name
-            
-            attempts += 1
-        except EOFError:  # Handle cases where input isn't available
-            print("\nInput error. Using default value.")
-            return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
-    
-    # After max attempts, return a default
-    return "no" if input_type == "yn" else ("a" if input_type == "letter" else "Player1")
+            response = sys.stdin.readline().strip().lower()
+        else:
+            response = input(prompt).strip().lower()
+        
+        if input_type == "yn":
+            return "yes" if response in ("yes", "y") else "no"
+        elif input_type == "letter":
+            if len(response) == 1 and response.isalpha():
+                return response
+            return None  # Force re-prompt
+        return response or "Player1"  # Default for text input
+    except Exception:
+        return None  # Return None on any error
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -204,17 +191,17 @@ def play_game():
     lives = 6
     wrong_answers = 0
     display = ["_"] * word_length
-    guessed_letters = []  # Track guessed letters
+    guessed_letters = []
 
-    while not end_of_game:
+    while not end_of_game and lives > 0:
         print('\n' + ' '.join(display))
         print(stages[lives])
 
         # Get valid letter input
         while True:
-            guess = get_input("Guess a letter: ", "letter").lower()
-            if not guess:
-                print("Please enter a single letter.")
+            guess = get_input("Guess a letter: ", "letter")
+            if guess is None:
+                print("Invalid input. Please try again.")
                 continue
             if guess in guessed_letters:
                 print(f"You already guessed '{guess}'. Try a different letter.")
@@ -233,13 +220,13 @@ def play_game():
             print(f"Sorry, '{guess}' is not in the word. You lose a life!")
             lives -= 1
             wrong_answers += 1
-            if lives == 0:
-                end_of_game = True
-                print(f"Game over! The word was: {chosen_word}")
 
         if "_" not in display:
             end_of_game = True
-            print(f"Congratulations! You guessed the word: {chosen_word}")
+            print(f"Congratulations! You guessed: {chosen_word}")
+
+    if lives <= 0:
+        print(f"Game over! The word was: {chosen_word}")
 
     total_wrong_answers += wrong_answers
 
