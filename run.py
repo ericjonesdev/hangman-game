@@ -8,19 +8,23 @@ import sys
 
 def get_input(prompt, input_type="text"):
     """
-    Universal input handler with type-specific defaults
+    Universal input handler with strict yes/no validation
     input_type: "text" (for names) or "yn" (for yes/no)
     """
     try:
         if sys.stdin and sys.stdin.isatty():  # Local terminal
-            return input(prompt)
+            response = input(prompt).strip().lower()
         else:  # For Render/Heroku
             print(prompt, end='', flush=True)
-            response = sys.stdin.readline().strip()
-            
-            if input_type == "yn":
-                return response.lower() if response in ("yes", "no", "y", "n") else "no"
-            return response or ("Player1" if input_type == "text" else "")
+            response = sys.stdin.readline().strip().lower()
+        
+        if input_type == "yn":
+            if response in ("yes", "y"):
+                return "yes"
+            elif response in ("no", "n"):
+                return "no"
+            return "no"  # Default for invalid/missing input
+        return response or "Player1"  # Default for text input
     except Exception:
         return "no" if input_type == "yn" else "Player1"
 
@@ -269,22 +273,19 @@ def initialize_game():
     else:
         print("No high scores yet!")
 
-    player_name = get_input("What is your name?:\n ")
+    player_name = get_input("What is your name?:\n ", "text")
 
     # Initialize the total wrong answers
     total_wrong_answers = 0
 
-    # Prompt user to view game stats
+    # Prompt user to view game stats - WITH VALIDATION LOOP
     while True:
-        view_stats = get_input("Would you like to view game stats" +
-                           "of the last 10 players? (yes/no):\n ").lower()
+        view_stats = get_input("Would you like to view game stats of the last 10 players? (yes/no):\n ", "yn")
         if view_stats == "yes":
             view_game_stats()
             break
         elif view_stats == "no":
             break
-        else:
-            print("Invalid input! Please enter 'yes' or 'no'.")
 
 
 def main():
