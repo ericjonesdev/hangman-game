@@ -4,6 +4,7 @@ from hangman_art import stages, logo
 from hangman_words import word_list
 import random
 import os
+import sys
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -22,6 +23,15 @@ hilltop = SHEET.worksheet('hilltop')
 data = gamers.get_all_values()
 
 data2 = hilltop.get_all_values()
+
+def get_input(prompt):
+    """Handles input for both local and Render environments."""
+    try:
+        return input(prompt)
+    except EOFError:
+        # For Render background worker
+        print("\n[System] Using test player name 'Player1'")
+        return "Player1"  # Default name for non-interactive environments
 
 
 def view_game_stats():
@@ -189,7 +199,7 @@ def play_game():
 
         print(' '.join(display))
 
-        guess = input("Guess a letter:\n ").lower()
+        guess = get_input("Guess a letter:\n ").lower()
         clear()
 
         # Check if the user's input is a valid letter
@@ -251,7 +261,7 @@ def initialize_game():
     else:
         print("No high scores yet!")
 
-    player_name = input("What is your name?:\n ")
+    player_name = get_input("What is your name?:\n ")
 
     # Initialize the total wrong answers
     total_wrong_answers = 0
@@ -284,7 +294,7 @@ def main():
         average_score(player_name, total_wrong_answers)
         update_hilltop_score(player_name, total_wrong_answers, games_played)
 
-        play_again = input("Do you want to play again? (yes/no): ").lower()
+        play_again = get_input("Do you want to play again? (yes/no): ").lower()
 
         while play_again not in ["yes", "no"]:
             print("Invalid input! Please enter 'yes' or 'no'.")
