@@ -6,16 +6,23 @@ import random
 import os
 import sys
 
-def get_input(prompt):
-    """Universal input handler that works everywhere"""
+def get_input(prompt, input_type="text"):
+    """
+    Universal input handler with type-specific defaults
+    input_type: "text" (for names) or "yn" (for yes/no)
+    """
     try:
-        if sys.stdin and sys.stdin.isatty():  # True in local terminals
+        if sys.stdin and sys.stdin.isatty():  # Local terminal
             return input(prompt)
         else:  # For Render/Heroku
             print(prompt, end='', flush=True)
-            return sys.stdin.readline().strip() or "Player1"
+            response = sys.stdin.readline().strip()
+            
+            if input_type == "yn":
+                return response.lower() if response in ("yes", "no", "y", "n") else "no"
+            return response or ("Player1" if input_type == "text" else "")
     except Exception:
-        return "Player1"  # Fallback
+        return "no" if input_type == "yn" else "Player1"
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
