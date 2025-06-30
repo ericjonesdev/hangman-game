@@ -25,4 +25,4 @@ RUN pip install --no-cache-dir \
 ENV PYTHONUNBUFFERED=1
 
 # Run the game
-CMD ["python", "hangman.py"]
+CMD ["python", "run.py"]
