@@ -10,21 +10,28 @@ import json
 
 def get_input(prompt, input_type="text"):
     """
-    Universal input handler with strict validation
-    input_type: "text" (for names), "yn" (for yes/no), or "letter" (for guesses)
+    Universal input handler that works both locally and on Fly.io
     """
+    # Auto-respond in production environment
+    if os.getenv('FLY_APP_NAME'):
+        if input_type == "yn":
+            return "no"  # Default answer in production
+        elif input_type == "letter":
+            return random.choice('abcdefghijklmnopqrstuvwxyz')  # Auto-guess
+        return "Player1"  # Default name
+    
+    # Original interactive logic for local runs
     try:
         response = input(prompt).strip().lower()
-        
         if input_type == "yn":
             return "yes" if response in ("yes", "y") else "no"
         elif input_type == "letter":
             if len(response) == 1 and response.isalpha():
                 return response
-            return None  # Force re-prompt
-        return response or "Player1"  # Default for text input
+            return None
+        return response or "Player1"
     except Exception:
-        return None  # Return None on any error
+        return None
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
