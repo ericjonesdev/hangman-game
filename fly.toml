@@ -6,4 +6,4 @@ primary_region = "ord"
   dockerfile = "Dockerfile"
 
 [processes]
-  app = "pythoon -u run.py"
+  app = "python -u run.py"
