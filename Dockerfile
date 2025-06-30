@@ -1,28 +1,26 @@
-# Use official Python 3.9 image
 FROM python:3.9-slim
 
-# Set working directory in container
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies (needed for gspread)
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy only necessary files
-COPY *.py ./
-COPY requirements.txt ./
+# Copy ONLY necessary files (change if your filename is different)
+COPY run.py .
+COPY hangman_art.py .
+COPY hangman_words.py .
+COPY requirements.txt .
 
-# Install Python dependencies
+# Install Python packages
 RUN pip install --no-cache-dir \
     gspread \
     google-auth \
     google-auth-oauthlib \
     google-api-python-client
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-
 # Run the game
-CMD ["python", "run.py"]
+CMD ["python", "-u", "run.py"]
