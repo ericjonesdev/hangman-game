@@ -8,3 +8,5 @@ node_modules/
 .github/
 creds.jsoncreds.json
 clean_creds.json
+creds.json
+creds.json.txt
