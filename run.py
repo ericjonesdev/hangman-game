@@ -70,6 +70,9 @@ hilltop = SHEET.worksheet('hilltop') if SHEET else None
 data = gamers.get_all_values() if gamers else []
 data2 = hilltop.get_all_values() if hilltop else []
 
+total_wrong_answers = 0
+player_name = ""
+
 def view_game_stats():
     '''
     Function to display game statistics of the last 10 players.
@@ -216,6 +219,7 @@ def play_game():
 
 def initialize_game():
     global player_name, total_wrong_answers
+    total_wrong_answers = 0 # reset counter for new game
     
     print(logo)
     
