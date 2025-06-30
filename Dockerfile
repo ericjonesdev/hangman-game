@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy only necessary files (excludes creds.json)
+# Copy only necessary files
 COPY *.py ./
 COPY requirements.txt ./
 
@@ -23,7 +23,6 @@ RUN pip install --no-cache-dir \
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-# ENV GOOGLE_CREDS=""  # Not needed - Fly.io secrets auto-inject
 
 # Run the game
 CMD ["python", "hangman.py"]
