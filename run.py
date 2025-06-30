@@ -31,19 +31,19 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
 ]
 
+# Load credentials from environment variable
 creds_json = os.getenv('GOOGLE_CREDS')
 if not creds_json:
-    print("ERROR: Google Sheets credentials not found!")
+    print("ERROR: Google Sheets credentials not found in environment!")
     sys.exit(1)
 
 try:
-    # Changed from from_service_account_FILE to from_service_account_INFO
     CREDS = Credentials.from_service_account_info(json.loads(creds_json))
     SCOPED_CREDS = CREDS.with_scopes(SCOPE)
     GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
     SHEET = GSPREAD_CLIENT.open('hangman_user_scores')
 except Exception as e:
-    print(f"Failed to connect to Google Sheets: {str(e)}")
+    print(f"Google Sheets connection failed: {str(e)}")
     sys.exit(1)
 
 gamers = SHEET.worksheet('gamers')
