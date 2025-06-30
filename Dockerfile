@@ -10,8 +10,9 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy all files to container
-COPY . .
+# Copy only necessary files (excludes creds.json)
+COPY *.py ./
+COPY requirements.txt ./
 
 # Install Python dependencies
 RUN pip install --no-cache-dir \
@@ -20,13 +21,9 @@ RUN pip install --no-cache-dir \
     google-auth-oauthlib \
     google-api-python-client
 
-# Make sure creds.json exists (critical for Google Sheets)
-RUN if [ ! -f "creds.json" ]; then \
-    echo "ERROR: creds.json missing! Please mount this file." && exit 1; \
-    fi
-
-# Set environment variable for Python output
+# Set environment variables
 ENV PYTHONUNBUFFERED=1
+# ENV GOOGLE_CREDS=""  # Not needed - Fly.io secrets auto-inject
 
 # Run the game
 CMD ["python", "hangman.py"]
