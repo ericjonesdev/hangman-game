@@ -1,8 +1,10 @@
 app = "hangman-game"
 
-primary_region = "atl"
-
+primary_region = "ord"
 
 [build]
-  builder = "docker"
   dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
