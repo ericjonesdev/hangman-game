@@ -1,5 +1,6 @@
 import gspread
 from google.oauth2.service_account import Credentials
+from google.auth.exceptions import MalformedError, TransportError
 from hangman_art import stages, logo
 from hangman_words import word_list
 import random
@@ -31,31 +32,45 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-# Load credentials from environment variable
-creds_json = os.getenv('GOOGLE_CREDS')
-if not creds_json:
-    print("ERROR: Google Sheets credentials not found in environment!")
-    sys.exit(1)
+# --- Improved Credentials Loading ---
+def init_google_sheets():
+    """Initialize Google Sheets connection with robust error handling"""
+    creds_json = os.getenv('GOOGLE_CREDS')
+    if not creds_json:
+        print("WARNING: Google Sheets credentials not found - running in local mode")
+        return None
 
-try:
-    CREDS = Credentials.from_service_account_info(json.loads(creds_json))
-    SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-    GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-    SHEET = GSPREAD_CLIENT.open('hangman_user_scores')
-except Exception as e:
-    print(f"Google Sheets connection failed: {str(e)}")
-    sys.exit(1)
+    try:
+        creds_info = json.loads(creds_json)
+        CREDS = Credentials.from_service_account_info(creds_info)
+        SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+        GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+        return GSPREAD_CLIENT.open('hangman_user_scores')
+    except json.JSONDecodeError:
+        print("ERROR: Invalid JSON in credentials")
+    except MalformedError:
+        print("ERROR: Malformed Google credentials")
+    except TransportError as e:
+        print(f"Network error: {str(e)}")
+    except Exception as e:
+        print(f"Unexpected error: {str(e)}")
+    return None
 
-gamers = SHEET.worksheet('gamers')
-hilltop = SHEET.worksheet('hilltop')
-
-data = gamers.get_all_values()
-data2 = hilltop.get_all_values()
+# Initialize sheets connection
+SHEET = init_google_sheets()
+gamers = SHEET.worksheet('gamers') if SHEET else None
+hilltop = SHEET.worksheet('hilltop') if SHEET else None
+data = gamers.get_all_values() if gamers else []
+data2 = hilltop.get_all_values() if hilltop else []
 
 def view_game_stats():
     '''
     Function to display game statistics of the last 10 players.
     '''
+    if not SHEET:
+        print("\nGoogle Sheets not available - stats unavailable")
+        return
+
     print("\nGame Stats of the Last 10 Players:")
     print("-----------------------------------")
 
@@ -70,6 +85,10 @@ def update_hilltop_score(player_name, total_wrong_answers, games_played):
     '''
     Function to get and update the best player score
     '''
+    if not SHEET:
+        print("Google Sheets not available - scores not saved")
+        return
+
     print(f"Total Wrong Answers: {total_wrong_answers}, Games Played: {games_played}")
 
     new_score = total_wrong_answers / games_played if games_played > 0 else 0
@@ -106,6 +125,9 @@ def get_and_update_games_played(player_name):
     '''
     Function to update games played
     '''
+    if not SHEET:
+        return 1  # Default if Sheets unavailable
+
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
@@ -120,6 +142,9 @@ def average_score(player_name, total_wrong_answers=0):
     '''
     Function to calculate average score
     '''
+    if not SHEET:
+        return None
+
     records = gamers.get_all_records()
     for idx, record in enumerate(records, start=2):
         if record['username'] == player_name:
@@ -188,7 +213,7 @@ def initialize_game():
     print(logo)
     
     try:
-        if len(data2) > 1:
+        if SHEET and len(data2) > 1:
             player = hilltop.col_values(1)[1]
             high_score = hilltop.col_values(2)[1]
             print(f"Top Scorer: {player} Score: {high_score}")
@@ -232,4 +257,15 @@ def main():
     print("Thanks for playing!")
 
 if __name__ == "__main__":
-    main()
+    # For Fly.io compatibility
+    if os.getenv('FLY_APP_NAME'):
+        print("Running in Fly.io environment")
+        from http.server import HTTPServer, BaseHTTPRequestHandler
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b'Hangman Game Running')
+        HTTPServer(('0.0.0.0', 8080), Handler).serve_forever()
+    else:
+        main()
