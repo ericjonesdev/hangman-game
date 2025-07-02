@@ -10,28 +10,35 @@ import json
 
 def get_input(prompt, input_type="text"):
     """
-    Universal input handler that works both locally and on Fly.io
+    Production-safe input handler with strict validation
     """
-    # Auto-respond in production environment
+    # Auto-respond in production
     if os.getenv('FLY_APP_NAME'):
         if input_type == "yn":
-            return "no"  # Default answer in production
+            print(f"Auto-responding 'no' to: {prompt}")  # Log the auto-response
+            return "no"
         elif input_type == "letter":
-            return random.choice('abcdefghijklmnopqrstuvwxyz')  # Auto-guess
-        return "Player1"  # Default name
+            letter = random.choice('abcdefghijklmnopqrstuvwxyz')
+            print(f"Auto-guessing: {letter}")  # Log the auto-guess
+            return letter
+        return "Player1"
     
-    # Original interactive logic for local runs
-    try:
-        response = input(prompt).strip().lower()
-        if input_type == "yn":
-            return "yes" if response in ("yes", "y") else "no"
-        elif input_type == "letter":
-            if len(response) == 1 and response.isalpha():
-                return response
-            return None
-        return response or "Player1"
-    except Exception:
-        return None
+    # Original local input handling
+    while True:
+        try:
+            response = input(prompt).strip().lower()
+            if input_type == "yn":
+                if response in ("yes", "y", "no", "n"):
+                    return "yes" if response in ("yes", "y") else "no"
+                print("Please answer 'yes' or 'no'.")
+            elif input_type == "letter":
+                if len(response) == 1 and response.isalpha():
+                    return response
+                print("Please enter a single letter.")
+            else:  # text input
+                return response or "Player1"
+        except (EOFError, KeyboardInterrupt):
+            return "no" if input_type == "yn" else "Player1"
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
