@@ -39,7 +39,6 @@ SCOPE = [
     "https://www.googleapis.com/auth/drive"
 ]
 
-# --- Improved Credentials Loading ---
 def init_google_sheets():
     """Initialize Google Sheets connection with robust error handling"""
     creds_json = os.getenv('GOOGLE_CREDS')
@@ -268,4 +267,13 @@ def main():
     print("Thanks for playing!")
 
 if __name__ == "__main__":
+    if os.getenv('FLY_APP_NAME'):
+        # Production mode - run continuously with auto-responses
+        while True:
+            try:
+                main()
+            except KeyboardInterrupt:
+                sys.exit(0)
+    else:
+        # Local development mode
         main()
