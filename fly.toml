@@ -7,3 +7,7 @@ primary_region = "ord"
 
 [processes]
   app = "python -u run.py"
+
+[http_service]
+  force_http_to_https = false
+  disable_http_checks = true

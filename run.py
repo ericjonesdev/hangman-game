@@ -268,15 +268,4 @@ def main():
     print("Thanks for playing!")
 
 if __name__ == "__main__":
-    # For Fly.io compatibility
-    if os.getenv('FLY_APP_NAME'):
-        print("Running in Fly.io environment")
-        from http.server import HTTPServer, BaseHTTPRequestHandler
-        class Handler(BaseHTTPRequestHandler):
-            def do_GET(self):
-                self.send_response(200)
-                self.end_headers()
-                self.wfile.write(b'Hangman Game Running')
-        HTTPServer(('0.0.0.0', 8080), Handler).serve_forever()
-    else:
         main()
